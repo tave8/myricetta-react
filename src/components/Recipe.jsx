@@ -360,7 +360,7 @@ const RecipeComponent = (props) => {
                   </tbody>
                   <tfoot>
                     {ingredientsCalculationsFromRecipeQuantity?.ingredients.length > 0 && (
-                      <tr>
+                      <tr className="table-primary">
                         <td>TOTALE:</td>
                         <td>{ingredientsCalculationsFromRecipeQuantity.totIngredientsRounded}</td>
                       </tr>
