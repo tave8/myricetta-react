@@ -1,6 +1,6 @@
 import "bootstrap/dist/css/bootstrap.min.css"
 import "./App.css"
-import { BrowserRouter, Routes, Route } from "react-router-dom"
+import { BrowserRouter, Routes, Route, Link } from "react-router-dom"
 import { Container, Row, Col, CardGroup, Card, Spinner, Alert, Button, Image, Form, ListGroup, Navbar, NavDropdown, Nav } from "react-bootstrap"
 import { Helmet } from "react-helmet"
 
@@ -11,7 +11,7 @@ import { store, persistedStore } from "./redux/store/index"
 import { PersistGate } from "redux-persist/integration/react"
 
 // routes/pages
-// import Home from "./components/home/Home"
+import AddRecipe from "./components/Recipe"
 // import NotFound from "./components/NotFound"
 
 // components
@@ -26,30 +26,42 @@ function App() {
             <Col xs={12} className="p-0" style={{}}>
               <Navbar expand="lg" className="bg-body-tertiary">
                 <Container fluid>
-                  <Navbar.Brand href="#home">myricetta</Navbar.Brand>
+                  <Navbar.Brand as={Link} to="/add-recipe">
+                    myricetta
+                  </Navbar.Brand>
                   <Navbar.Toggle aria-controls="basic-navbar-nav" />
                   <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="me-auto">
-                      <Nav.Link href="#home">Home</Nav.Link>
-                      <Nav.Link href="#link">Link</Nav.Link>
-                      <NavDropdown title="Dropdown" id="basic-nav-dropdown">
+                      <Nav.Link as={Link} to="/add-recipe">
+                        Aggiungi ricetta
+                      </Nav.Link>
+                      {/* <Nav.Link as={Link} to="/see-recipes">
+                        Le mie ricette
+                      </Nav.Link> */}
+
+                      {/* <Nav.Link href="#home">Home</Nav.Link>
+                      <Nav.Link href="#link">Link</Nav.Link> */}
+
+                      {/* <NavDropdown title="Dropdown" id="basic-nav-dropdown">
                         <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
                         <NavDropdown.Item href="#action/3.2">Another action</NavDropdown.Item>
                         <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
                         <NavDropdown.Divider />
                         <NavDropdown.Item href="#action/3.4">Separated link</NavDropdown.Item>
-                      </NavDropdown>
+                      </NavDropdown> */}
                     </Nav>
                   </Navbar.Collapse>
                 </Container>
               </Navbar>
             </Col>
 
-            <Col xs={12} className="" style={{ flexGrow: 1 }}>
+            {/* PAGES/ROUTES */}
+            <Col xs={12} className="py-3" style={{ flexGrow: 1 }}>
               <Row>
-                <Col>
-                  <p>main content</p>
-                </Col>
+                <Routes>
+                  <Route path="/add-recipe" element={<AddRecipe />} />
+                  {/* <Route path="/see-recipes" /> */}
+                </Routes>
               </Row>
             </Col>
 
@@ -58,27 +70,8 @@ function App() {
               <Row className="flex-column">
                 <Col>
                   <Row>
-                    <Col xs={"auto"}>
-                      <p>italia</p>
-                    </Col>
-                    <Col xs={"auto"}>
-                      <p>english</p>
-                    </Col>
-                  </Row>
-                </Col>
-                <Col>
-                  <p>copyright</p>
-                </Col>
-                <Col>
-                  <Row className="flex-wrap">
-                    <Col xs={"auto"}>
-                      <p>link 1</p>
-                    </Col>
-                    <Col xs={"auto"}>
-                      <p>link 2</p>
-                    </Col>
-                    <Col xs={"auto"}>
-                      <p>link 3</p>
+                    <Col className="text-center">
+                      <p className="m-2">myricetta - 2026</p>
                     </Col>
                   </Row>
                 </Col>
