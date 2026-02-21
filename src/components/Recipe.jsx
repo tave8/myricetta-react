@@ -43,7 +43,7 @@ const RecipeComponent = (props) => {
               />
             </Form.Group>
           </Col>
-          {/* INGREDIENTS (add ingredient, ingredients list) */}
+          {/* INITIAL/ORIGINAL INGREDIENTS (add ingredient, ingredients list) */}
           <Col>
             <Row className="flex-column g-3">
               {/* title */}
@@ -171,8 +171,9 @@ const RecipeComponent = (props) => {
                         </tr>
                       )
                     })}
-                    {/* no calculation yet */}
-                    {ingredientsCalculations?.ingredients.length == 0 && (
+
+                    {/* no ingredients */}
+                    {(!ingredientsCalculations || ingredientsCalculations.ingredients.length == 0) && (
                       <tr>
                         <td colSpan="4">Aggiungi il primo ingrediente</td>
                       </tr>
@@ -216,7 +217,7 @@ const RecipeComponent = (props) => {
                   </Col>
                   {/* known ingredient name */}
                   <Col xs={8}>
-                    <Form.Group controlId="exampleSelect">
+                    <Form.Group>
                       <Form.Select defaultValue={""}>
                         <option value="">
                           Seleziona ingrediente
