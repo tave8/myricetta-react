@@ -160,14 +160,14 @@ const RecipeComponent = (props) => {
                   )
                 })}
                 {/* no calculation yet */}
-                {!ingredientsCalculations && (
+                {ingredientsCalculations?.ingredients.length == 0 && (
                   <tr>
                     <td colSpan="4">Aggiungi il primo ingrediente</td>
                   </tr>
                 )}
               </tbody>
               <tfoot>
-                {ingredientsCalculations && (
+                {ingredientsCalculations?.ingredients.length > 0 && (
                   <tr>
                     <td>TOTALE:</td>
                     <td>{ingredientsCalculations.totIngredientsRounded}</td>
