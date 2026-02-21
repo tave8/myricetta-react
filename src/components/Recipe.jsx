@@ -5,15 +5,25 @@ import { Helmet } from "react-helmet"
 import Recipe from "../assets/js/Recipe"
 
 const RecipeComponent = (props) => {
-  // const [ingredients, setIngredients] 
-  
+  // const [ingredients, setIngredients]
 
   return (
-    <Col>
-      <Row>
-        <Col>1</Col>
-      </Row>
-    </Col>
+    <Row className="justify-content-center">
+      <Col xs={12} md={6}>
+        <Row className="flex-column g-3">
+          {/* RECIPE INFO (name, photo etc.) */}
+          <Col>
+            <Form.Group>
+              <Form.Control type="text" placeholder="Nome ricetta" />
+            </Form.Group>
+          </Col>
+          {/* INGREDIENTS */}
+          <Col>
+            
+          </Col>
+        </Row>
+      </Col>
+    </Row>
   )
 }
 

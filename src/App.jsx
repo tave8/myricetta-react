@@ -3,13 +3,11 @@ import "./App.css"
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom"
 import { Container, Row, Col, CardGroup, Card, Spinner, Alert, Button, Image, Form, ListGroup, Navbar, NavDropdown, Nav } from "react-bootstrap"
 import { Helmet } from "react-helmet"
-
 // redux
 import { Provider } from "react-redux"
 // redux persist
 import { store, persistedStore } from "./redux/store/index"
 import { PersistGate } from "redux-persist/integration/react"
-
 // pages components
 import AddRecipeComponent from "./components/Recipe"
 import NotFoundComponent from "./components/NotFound"
@@ -27,14 +25,11 @@ function App() {
             <NavbarComponent />
 
             {/* PAGES/ROUTES */}
-            <Col xs={12} className="py-3" style={{ flexGrow: 1 }}>
-              <Row>
-                <Routes>
-                  <Route path="/add-recipe" element={<AddRecipeComponent />} />
-                  {/* <Route path="/see-recipes" /> */}
-                  <Route path="*" element={<NotFoundComponent />} />
-                </Routes>
-              </Row>
+            <Col xs={12} className="py-3" style={{ flexGrow: 1 }} id="pages-container">
+              <Routes>
+                <Route path="/add-recipe" element={<AddRecipeComponent />} />
+                <Route path="*" element={<NotFoundComponent />} />
+              </Routes>
             </Col>
 
             {/* FOOTER */}
