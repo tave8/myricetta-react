@@ -259,7 +259,6 @@ const RecipeComponent = (props) => {
                     <tr>
                       <th>Ingr.</th>
                       <th>Q.tà</th>
-                      <th>%</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -270,7 +269,6 @@ const RecipeComponent = (props) => {
                         <tr key={ingredient.id}>
                           <td>{ingredient.name}</td>
                           <td>{ingredient.quantityRounded}</td>
-                          <td>{ingredient.percentageRounded}</td>
                         </tr>
                       )
                     })}
@@ -278,7 +276,7 @@ const RecipeComponent = (props) => {
                     {/* no ingredients */}
                     {(!ingredientsCalculationsFromIngredient || ingredientsCalculationsFromIngredient.ingredients.length == 0) && (
                       <tr>
-                        <td colSpan="4">Aggiungi il primo ingrediente</td>
+                        <td colSpan="3">Aggiungi il primo ingrediente</td>
                       </tr>
                     )}
                   </tbody>
