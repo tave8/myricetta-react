@@ -130,7 +130,7 @@ const RecipeComponent = (props) => {
                 </tr>
               </thead>
               <tbody>
-                {/*  */}
+                {/* exist ingredients */}
                 {ingredientsCalculations?.ingredients.map((ingredient) => {
                   return (
                     <tr key={ingredient.id}>
@@ -138,7 +138,23 @@ const RecipeComponent = (props) => {
                       <td>{ingredient.quantityRounded}</td>
                       <td>{ingredient.percentageRounded}</td>
                       <td className="text-end">
-                        <Button variant="danger">-</Button>
+                        <Button
+                          variant="danger"
+                          onClick={() => {
+                            const context = {
+                              setNewIngredientName,
+                              setNewIngredientQuantity,
+                              newIngredientName,
+                              newIngredientQuantity,
+                              setIngredientsCalculations,
+                              _recipeInstance,
+                            }
+                            const ingredientNameToRemove = ingredient.name
+                            removeIngredientHelper(context)(ingredientNameToRemove)
+                          }}
+                        >
+                          -
+                        </Button>
                       </td>
                     </tr>
                   )
@@ -181,15 +197,28 @@ const addIngredientHelper = ({
     // input focus on ingredient name
     focusNewIngredientName()
     // add ingredient
-
     _recipeInstance.addIngredient({
       name: newIngredientName,
       quantity: newIngredientQuantity,
     })
-
+    // set new ingredients in the react component state
     setIngredientsCalculations(_recipeInstance.getIngredients())
-    // console.log(_recipeInstance.getIngredients())
-    // console.log(_recipeInstance)
+  }
+}
+
+const removeIngredientHelper = ({
+  _recipeInstance,
+  setNewIngredientName,
+  setNewIngredientQuantity,
+  newIngredientName,
+  newIngredientQuantity,
+  setIngredientsCalculations,
+}) => {
+  return (ingredientNameToRemove) => {
+    // remove ingredient
+    _recipeInstance.removeIngredientByName(ingredientNameToRemove)
+    // set new ingredients in the react component state
+    setIngredientsCalculations(_recipeInstance.getIngredients())
   }
 }
 
