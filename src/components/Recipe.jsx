@@ -155,7 +155,7 @@ const RecipeComponent = (props) => {
                       <th>Ingr.</th>
                       <th>Q.tà</th>
                       <th>%</th>
-                      <th></th>
+                      <th className="text-end">Azioni</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -201,8 +201,8 @@ const RecipeComponent = (props) => {
                   </tbody>
                   <tfoot>
                     {ingredientsCalculations?.ingredients.length > 0 && (
-                      <tr>
-                        <td>TOTALE:</td>
+                      <tr className="fw-bold">
+                        <td className="text-end">TOTALE:</td>
                         <td>{ingredientsCalculations.totIngredientsRounded}</td>
                       </tr>
                     )}
@@ -268,7 +268,7 @@ const RecipeComponent = (props) => {
                   <thead>
                     <tr>
                       <th>Ingr.</th>
-                      <th>Q.tà</th>
+                      <th className="text-end">Q.tà</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -278,7 +278,7 @@ const RecipeComponent = (props) => {
                       return (
                         <tr key={ingredient.id} className={isIngredientInListSameAsKnownIngredient ? "table-primary" : ""}>
                           <td>{ingredient.name}</td>
-                          <td>{ingredient.quantityRounded}</td>
+                          <td className="text-end">{ingredient.quantityRounded}</td>
                         </tr>
                       )
                     })}
@@ -292,8 +292,8 @@ const RecipeComponent = (props) => {
                   </tbody>
                   <tfoot>
                     {ingredientsCalculationsFromIngredient?.ingredients.length > 0 && (
-                      <tr>
-                        <td>TOTALE:</td>
+                      <tr className="text-end fw-bold">
+                        <td >TOTALE:</td>
                         <td>{ingredientsCalculationsFromIngredient.totIngredientsRounded}</td>
                       </tr>
                     )}
@@ -336,7 +336,7 @@ const RecipeComponent = (props) => {
                   <thead>
                     <tr>
                       <th>Ingr.</th>
-                      <th>Q.tà</th>
+                      <th className="text-end">Q.tà</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -346,7 +346,7 @@ const RecipeComponent = (props) => {
                       return (
                         <tr key={ingredient.id}>
                           <td>{ingredient.name}</td>
-                          <td>{ingredient.quantityRounded}</td>
+                          <td className="text-end">{ingredient.quantityRounded}</td>
                         </tr>
                       )
                     })}
@@ -360,9 +360,9 @@ const RecipeComponent = (props) => {
                   </tbody>
                   <tfoot>
                     {ingredientsCalculationsFromRecipeQuantity?.ingredients.length > 0 && (
-                      <tr className="table-primary">
-                        <td>TOTALE:</td>
-                        <td>{ingredientsCalculationsFromRecipeQuantity.totIngredientsRounded}</td>
+                      <tr className="table-primary fw-bold">
+                        <td className="text-end">TOTALE:</td>
+                        <td className="text-end">{ingredientsCalculationsFromRecipeQuantity.totIngredientsRounded}</td>
                       </tr>
                     )}
                   </tfoot>
