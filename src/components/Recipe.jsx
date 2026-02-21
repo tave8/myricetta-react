@@ -349,6 +349,10 @@ const removeIngredientHelper = ({
       alert("Non puoi rimuovere questo ingrediente perché selezionato altrove.")
       return
     }
+
+    console.log("in removeIngredientHelper")
+    console.log(ingredientNameToRemove)
+    console.log(_recipeInstance)
     // remove ingredient
     _recipeInstance.removeIngredientByName(ingredientNameToRemove)
     // set new ingredients in the react component state
