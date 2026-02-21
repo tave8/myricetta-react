@@ -274,9 +274,9 @@ const RecipeComponent = (props) => {
                   <tbody>
                     {/* exist ingredients */}
                     {ingredientsCalculationsFromIngredient?.ingredients.map((ingredient) => {
-                      // console.log(ingredient)
+                      const isIngredientInListSameAsKnownIngredient = ingredient.name == knownIngredientName
                       return (
-                        <tr key={ingredient.id}>
+                        <tr key={ingredient.id} className={isIngredientInListSameAsKnownIngredient ? "table-primary" : ""}>
                           <td>{ingredient.name}</td>
                           <td>{ingredient.quantityRounded}</td>
                         </tr>
