@@ -40,7 +40,7 @@ const RecipeComponent = (props) => {
                 value={recipeName}
                 onChange={(event) => {
                   const val = event.target.value
-                  setRecipeNameMiddleware(setRecipeName)(val)
+                  setRecipeName(val)
                 }}
               />
             </Form.Group>
@@ -65,13 +65,13 @@ const RecipeComponent = (props) => {
                         value={newIngredientName}
                         onChange={(event) => {
                           const val = event.target.value
-                          setNewIngredientNameMiddleware(setNewIngredientName)(val)
+                          setNewIngredientName(val)
                         }}
                         onKeyDown={(event) => {
                           // if user has typed Enter, trigger add ingredient
                           if (event.key == "Enter") {
                             const context = {
-                              setNewIngredientName: setNewIngredientNameMiddleware(setNewIngredientName),
+                              setNewIngredientName,
                               setNewIngredientQuantity,
                               newIngredientName,
                               newIngredientQuantity,
@@ -104,7 +104,7 @@ const RecipeComponent = (props) => {
                           // if user has typed Enter, trigger add ingredient
                           if (event.key == "Enter") {
                             const context = {
-                              setNewIngredientName: setNewIngredientNameMiddleware(setNewIngredientName),
+                              setNewIngredientName,
                               setNewIngredientQuantity,
                               newIngredientName,
                               newIngredientQuantity,
@@ -127,7 +127,7 @@ const RecipeComponent = (props) => {
                       variant="primary"
                       onClick={() => {
                         const context = {
-                          setNewIngredientName: setNewIngredientNameMiddleware(setNewIngredientName),
+                          setNewIngredientName,
                           setNewIngredientQuantity,
                           newIngredientName,
                           newIngredientQuantity,
@@ -397,7 +397,7 @@ const addIngredientHelper = ({
     focusNewIngredientName()
     // add ingredient
     _recipeInstance.addIngredient({
-      name: newIngredientName,
+      name: sanitizeIngredientName(newIngredientName),
       quantity: newIngredientQuantity,
     })
 
@@ -474,24 +474,15 @@ const isIngredientSelectedElsewhere = ({ knownIngredientName }) => {
   }
 }
 
-/** REACT STATE SETTERS - MIDDLEWARE FUNCTIONS */
-// Use cases: sanitize/modify user input and then save it to react comp local state.
-
-const setRecipeNameMiddleware = (setRecipeName) => {
-  return (val) => {
-    const sanitizedVal = val.trim().toLowerCase()
-    setRecipeName(sanitizedVal)
-  }
-}
-
-const setNewIngredientNameMiddleware = (setNewIngredientName) => {
-  return (val) => {
-    const sanitizedVal = val.trim().toLowerCase()
-    setNewIngredientName(sanitizedVal)
-  }
-}
-
 // MORE HELPERS
+
+const sanitizeIngredientName = (val) => {
+  return val.trim().toLowerCase()
+}
+
+const sanitizeRecipeName = (val) => {
+  return val.trim().toLowerCase()
+}
 
 const focusNewIngredientName = () => {
   const element = document.getElementById("new-ingredient-name")
