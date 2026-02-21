@@ -75,6 +75,9 @@ const RecipeComponent = (props) => {
                               newIngredientQuantity,
                               setIngredientsCalculations,
                               _recipeInstance,
+                              knownIngredientName,
+                              knownIngredientQuantity,
+                              setIngredientsCalculationsFromIngredient,
                             }
                             addIngredientHelper(context)()
                           }
@@ -103,6 +106,9 @@ const RecipeComponent = (props) => {
                               newIngredientQuantity,
                               setIngredientsCalculations,
                               _recipeInstance,
+                              knownIngredientName,
+                              knownIngredientQuantity,
+                              setIngredientsCalculationsFromIngredient,
                             }
                             addIngredientHelper(context)()
                           }
@@ -121,6 +127,9 @@ const RecipeComponent = (props) => {
                           newIngredientQuantity,
                           setIngredientsCalculations,
                           _recipeInstance,
+                          knownIngredientName,
+                          knownIngredientQuantity,
+                          setIngredientsCalculationsFromIngredient,
                         }
                         addIngredientHelper(context)()
                       }}
@@ -297,6 +306,9 @@ const addIngredientHelper = ({
   newIngredientName,
   newIngredientQuantity,
   setIngredientsCalculations,
+  knownIngredientName,
+  knownIngredientQuantity,
+  setIngredientsCalculationsFromIngredient,
 }) => {
   return () => {
     // empty the new ingredient inputs
@@ -309,8 +321,11 @@ const addIngredientHelper = ({
       name: newIngredientName,
       quantity: newIngredientQuantity,
     })
+
     // set new ingredients in the react component state
     setIngredientsCalculations(_recipeInstance.getIngredients())
+
+    calcIngredientsFromOneIngredientHelper({ _recipeInstance, knownIngredientName, knownIngredientQuantity, setIngredientsCalculationsFromIngredient })()
   }
 }
 
