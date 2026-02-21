@@ -211,6 +211,8 @@ const RecipeComponent = (props) => {
                         onChange={(event) => {
                           const val = event.target.value
                           setKnownIngredientQuantity(val)
+                          const context = { _recipeInstance, knownIngredientName, knownIngredientQuantity: val, setIngredientsCalculationsFromIngredient }
+                          calcIngredientsFromOneIngredientHelper(context)()
                         }}
                       />
                     </Form.Group>
@@ -218,13 +220,19 @@ const RecipeComponent = (props) => {
                   {/* known ingredient name */}
                   <Col xs={8}>
                     <Form.Group>
-                      <Form.Select defaultValue={""}>
-                        <option value="">
-                          Seleziona ingrediente
-                        </option>
-                        {ingredientsCalculations?.ingredients.map((ingredient, i) => {
+                      <Form.Select
+                        value={knownIngredientName}
+                        onChange={(event) => {
+                          const val = event.target.value
+                          setKnownIngredientName(val)
+                          const context = { _recipeInstance, knownIngredientName: val, knownIngredientQuantity, setIngredientsCalculationsFromIngredient }
+                          calcIngredientsFromOneIngredientHelper(context)()
+                        }}
+                      >
+                        <option value="">Seleziona ingrediente</option>
+                        {ingredientsCalculations?.ingredients.map((ingredient) => {
                           return (
-                            <option key={i} value={ingredient.name}>
+                            <option key={ingredient.id} value={ingredient.name}>
                               {ingredient.name}
                             </option>
                           )
@@ -247,6 +255,7 @@ const RecipeComponent = (props) => {
                   <tbody>
                     {/* exist ingredients */}
                     {ingredientsCalculationsFromIngredient?.ingredients.map((ingredient) => {
+                      // console.log(ingredient)
                       return (
                         <tr key={ingredient.id}>
                           <td>{ingredient.name}</td>
@@ -255,8 +264,9 @@ const RecipeComponent = (props) => {
                         </tr>
                       )
                     })}
-                    {/* no calculation yet */}
-                    {ingredientsCalculationsFromIngredient?.ingredients.length == 0 && (
+
+                    {/* no ingredients */}
+                    {(!ingredientsCalculationsFromIngredient || ingredientsCalculationsFromIngredient.ingredients.length == 0) && (
                       <tr>
                         <td colSpan="4">Aggiungi il primo ingrediente</td>
                       </tr>
@@ -317,6 +327,26 @@ const removeIngredientHelper = ({
     _recipeInstance.removeIngredientByName(ingredientNameToRemove)
     // set new ingredients in the react component state
     setIngredientsCalculations(_recipeInstance.getIngredients())
+  }
+}
+
+const calcIngredientsFromOneIngredientHelper = ({
+  _recipeInstance,
+  knownIngredientName,
+  knownIngredientQuantity,
+  setIngredientsCalculationsFromIngredient,
+}) => {
+  return () => {
+    // if there's no ingredient selected
+    if (knownIngredientName == "") {
+      return
+    }
+    // console.log(knownIngredientName, knownIngredientQuantity)
+    const res = _recipeInstance.calcFromIngredient({
+      name: knownIngredientName,
+      quantity: knownIngredientQuantity,
+    })
+    setIngredientsCalculationsFromIngredient(res)
   }
 }
 
