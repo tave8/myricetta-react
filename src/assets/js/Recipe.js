@@ -497,7 +497,6 @@ class Recipe {
   }
 }
 
-
 export default Recipe
 
 // USAGE
