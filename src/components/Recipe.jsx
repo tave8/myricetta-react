@@ -80,6 +80,8 @@ const RecipeComponent = (props) => {
                               knownIngredientName,
                               knownIngredientQuantity,
                               setIngredientsCalculationsFromIngredient,
+                              knownRecipeQuantity,
+                              setIngredientsCalculationsFromRecipeQuantity,
                             }
                             addIngredientHelper(context)()
                           }
@@ -111,6 +113,8 @@ const RecipeComponent = (props) => {
                               knownIngredientName,
                               knownIngredientQuantity,
                               setIngredientsCalculationsFromIngredient,
+                              knownRecipeQuantity,
+                              setIngredientsCalculationsFromRecipeQuantity,
                             }
                             addIngredientHelper(context)()
                           }
@@ -132,6 +136,8 @@ const RecipeComponent = (props) => {
                           knownIngredientName,
                           knownIngredientQuantity,
                           setIngredientsCalculationsFromIngredient,
+                          knownRecipeQuantity,
+                          setIngredientsCalculationsFromRecipeQuantity,
                         }
                         addIngredientHelper(context)()
                       }}
@@ -172,6 +178,8 @@ const RecipeComponent = (props) => {
                                   knownIngredientName,
                                   knownIngredientQuantity,
                                   setIngredientsCalculationsFromIngredient,
+                                  knownRecipeQuantity,
+                                  setIngredientsCalculationsFromRecipeQuantity,
                                 }
                                 const ingredientNameToRemove = ingredient.name
                                 removeIngredientHelper(context)(ingredientNameToRemove)
@@ -378,6 +386,8 @@ const addIngredientHelper = ({
   knownIngredientName,
   knownIngredientQuantity,
   setIngredientsCalculationsFromIngredient,
+  knownRecipeQuantity,
+  setIngredientsCalculationsFromRecipeQuantity,
 }) => {
   return () => {
     // empty the new ingredient inputs
@@ -396,6 +406,8 @@ const addIngredientHelper = ({
 
     // update "from one ingredient"
     calcIngredientsFromOneIngredientHelper({ _recipeInstance, knownIngredientName, knownIngredientQuantity, setIngredientsCalculationsFromIngredient })()
+    // update "from recipe quantity"
+    calcIngredientsFromRecipeQuantityHelper({ _recipeInstance, knownRecipeQuantity, setIngredientsCalculationsFromRecipeQuantity })()
   }
 }
 
@@ -405,6 +417,8 @@ const removeIngredientHelper = ({
   knownIngredientName,
   knownIngredientQuantity,
   setIngredientsCalculationsFromIngredient,
+  knownRecipeQuantity,
+  setIngredientsCalculationsFromRecipeQuantity,
 }) => {
   return (ingredientNameToRemove) => {
     // you cannot remove an ingredient that has been selected elsewhere
@@ -421,6 +435,8 @@ const removeIngredientHelper = ({
     setIngredientsCalculations(_recipeInstance.getIngredients())
     // update "from one ingredient"
     calcIngredientsFromOneIngredientHelper({ _recipeInstance, knownIngredientName, knownIngredientQuantity, setIngredientsCalculationsFromIngredient })()
+    // update "from recipe quantity"
+    calcIngredientsFromRecipeQuantityHelper({ _recipeInstance, knownRecipeQuantity, setIngredientsCalculationsFromRecipeQuantity })()
   }
 }
 
