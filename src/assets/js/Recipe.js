@@ -242,8 +242,10 @@ class Recipe {
   existsIngredientByName(ingredientName) {
     const item = this.getIngredientByName(ingredientName)
     console.log("in existsIngredientByName")
-    console.log(item)
-    console.log(item.constructor.name)
+    if (item) {
+      console.log(item)
+      console.log(item.constructor.name)
+    }
     const exists = item !== undefined && item.constructor.name === "Ingredient"
     return exists
   }
