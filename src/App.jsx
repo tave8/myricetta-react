@@ -10,11 +10,12 @@ import { Provider } from "react-redux"
 import { store, persistedStore } from "./redux/store/index"
 import { PersistGate } from "redux-persist/integration/react"
 
-// routes/pages
-import AddRecipe from "./components/Recipe"
-// import NotFound from "./components/NotFound"
-
-// components
+// pages components
+import AddRecipeComponent from "./components/Recipe"
+import NotFoundComponent from "./components/NotFound"
+// layout components
+import NavbarComponent from "./components/Navbar"
+import FooterComponent from "./components/Footer"
 
 function App() {
   return (
@@ -23,60 +24,21 @@ function App() {
         <Container fluid style={{ minHeight: "100vh" }}>
           <Row className="flex-column" style={{ minHeight: "100vh" }}>
             {/* NAVBAR */}
-            <Col xs={12} className="p-0" style={{}}>
-              <Navbar expand="lg" className="bg-body-tertiary">
-                <Container fluid>
-                  <Navbar.Brand as={Link} to="/add-recipe">
-                    myricetta
-                  </Navbar.Brand>
-                  <Navbar.Toggle aria-controls="basic-navbar-nav" />
-                  <Navbar.Collapse id="basic-navbar-nav">
-                    <Nav className="me-auto">
-                      <Nav.Link as={Link} to="/add-recipe">
-                        Aggiungi ricetta
-                      </Nav.Link>
-                      {/* <Nav.Link as={Link} to="/see-recipes">
-                        Le mie ricette
-                      </Nav.Link> */}
-
-                      {/* <Nav.Link href="#home">Home</Nav.Link>
-                      <Nav.Link href="#link">Link</Nav.Link> */}
-
-                      {/* <NavDropdown title="Dropdown" id="basic-nav-dropdown">
-                        <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
-                        <NavDropdown.Item href="#action/3.2">Another action</NavDropdown.Item>
-                        <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
-                        <NavDropdown.Divider />
-                        <NavDropdown.Item href="#action/3.4">Separated link</NavDropdown.Item>
-                      </NavDropdown> */}
-                    </Nav>
-                  </Navbar.Collapse>
-                </Container>
-              </Navbar>
-            </Col>
+            <NavbarComponent />
 
             {/* PAGES/ROUTES */}
             <Col xs={12} className="py-3" style={{ flexGrow: 1 }}>
               <Row>
                 <Routes>
-                  <Route path="/add-recipe" element={<AddRecipe />} />
+                  <Route path="/add-recipe" element={<AddRecipeComponent />} />
                   {/* <Route path="/see-recipes" /> */}
+                  <Route path="*" element={<NotFoundComponent />} />
                 </Routes>
               </Row>
             </Col>
 
             {/* FOOTER */}
-            <Col xs={12} className="bg-body-tertiary" style={{}}>
-              <Row className="flex-column">
-                <Col>
-                  <Row>
-                    <Col className="text-center">
-                      <p className="m-2">myricetta - 2026</p>
-                    </Col>
-                  </Row>
-                </Col>
-              </Row>
-            </Col>
+            <FooterComponent />
           </Row>
         </Container>
       </BrowserRouter>
