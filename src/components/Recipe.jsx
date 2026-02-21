@@ -395,11 +395,17 @@ const addIngredientHelper = ({
     setNewIngredientQuantity(1)
     // input focus on ingredient name
     focusNewIngredientName()
+
     // add ingredient
-    _recipeInstance.addIngredient({
-      name: sanitizeIngredientName(newIngredientName),
-      quantity: newIngredientQuantity,
-    })
+    try {
+      _recipeInstance.addIngredient({
+        name: sanitizeIngredientName(newIngredientName),
+        quantity: newIngredientQuantity,
+      })
+    } catch (err) {
+      console.error(err)
+      alert("Non puoi avere ingredienti con lo stesso nome.")
+    }
 
     // set new ingredients in the react component state
     setIngredientsCalculations(_recipeInstance.getIngredients())
