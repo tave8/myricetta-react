@@ -321,6 +321,10 @@ const addIngredientHelper = ({
       quantity: newIngredientQuantity,
     })
 
+    console.log("in addIngredientHelper")
+    console.log(newIngredientName, newIngredientQuantity)
+    console.log(_recipeInstance.getIngredients())
+
     // set new ingredients in the react component state
     setIngredientsCalculations(_recipeInstance.getIngredients())
 
