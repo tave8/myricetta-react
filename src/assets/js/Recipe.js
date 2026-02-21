@@ -95,6 +95,7 @@ class Recipe {
       const newIngredientQuantityRounded = Ingredient.roundQuantity(newIngredientQuantity)
 
       ingredientsList.push({
+        id: ingredient.getId(),
         name: ingredient.getName(),
         proportion: ingredientProportion,
         quantity: newIngredientQuantity,

@@ -11,14 +11,16 @@ const RecipeComponent = (props) => {
   const [recipeName, setRecipeName] = useState("")
   // initial/original ingredients
   const [ingredientsCalculations, setIngredientsCalculations] = useState(null)
-  // ingredients from 1 ingredient
-  const [ingredientsCalculationsFromIngredient, setIngredientsCalculationsFromIngredient] = useState(null)
   // the new ingredient that is being added
   const [newIngredientName, setNewIngredientName] = useState("")
   const [newIngredientQuantity, setNewIngredientQuantity] = useState(1)
-  // the one ingredient to calculate the others from
+  // feature: from one ingredient, calculate others
   const [knownIngredientName, setKnownIngredientName] = useState("")
   const [knownIngredientQuantity, setKnownIngredientQuantity] = useState(1)
+  const [ingredientsCalculationsFromIngredient, setIngredientsCalculationsFromIngredient] = useState(null)
+  // feature: from recipe total quantity, calculate ingredients
+  const [knownRecipeQuantity, setKnownRecipeQuantity] = useState(1)
+  const [ingredientsCalculationsFromRecipeQuantity, setIngredientsCalculationsFromRecipeQuantity] = useState(null)
 
   return (
     // centers content in the page
@@ -292,6 +294,74 @@ const RecipeComponent = (props) => {
               </Col>
             </Row>
           </Col>
+          {/* FROM TOTAL RECIPE, CALCULATE INGREDIENTS */}
+          <Col>
+            <Row className="flex-column g-3">
+              {/* title */}
+              <Col>
+                <h4>Ho il totale impasto, calcola gli ingredienti</h4>
+              </Col>
+              {/* known recipe (quantity) */}
+              <Col>
+                <Row className="">
+                  {/* known recipe quantity */}
+                  <Col xs={12} md={6}>
+                    <Form.Group>
+                      <Form.Control
+                        type="number"
+                        placeholder="Quantità (g)"
+                        value={knownRecipeQuantity}
+                        onChange={(event) => {
+                          const val = event.target.value
+                          setKnownRecipeQuantity(val)
+                          const context = { _recipeInstance, knownRecipeQuantity: val, setIngredientsCalculationsFromRecipeQuantity }
+                          calcIngredientsFromRecipeQuantityHelper(context)()
+                        }}
+                      />
+                    </Form.Group>
+                  </Col>
+                </Row>
+              </Col>
+              {/* ingredients list */}
+              <Col>
+                <Table striped bordered hover>
+                  <thead>
+                    <tr>
+                      <th>Ingr.</th>
+                      <th>Q.tà</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {/* exist ingredients */}
+                    {ingredientsCalculationsFromRecipeQuantity?.ingredients.map((ingredient) => {
+                      // console.log(ingredient)
+                      return (
+                        <tr key={ingredient.id}>
+                          <td>{ingredient.name}</td>
+                          <td>{ingredient.quantityRounded}</td>
+                        </tr>
+                      )
+                    })}
+
+                    {/* no ingredients */}
+                    {(!ingredientsCalculationsFromRecipeQuantity || ingredientsCalculationsFromRecipeQuantity.ingredients.length == 0) && (
+                      <tr>
+                        <td colSpan="3">Aggiungi il primo ingrediente</td>
+                      </tr>
+                    )}
+                  </tbody>
+                  <tfoot>
+                    {ingredientsCalculationsFromRecipeQuantity?.ingredients.length > 0 && (
+                      <tr>
+                        <td>TOTALE:</td>
+                        <td>{ingredientsCalculationsFromRecipeQuantity.totIngredientsRounded}</td>
+                      </tr>
+                    )}
+                  </tfoot>
+                </Table>
+              </Col>
+            </Row>
+          </Col>
         </Row>
       </Col>
     </Row>
@@ -372,6 +442,13 @@ const calcIngredientsFromOneIngredientHelper = ({
       quantity: knownIngredientQuantity,
     })
     setIngredientsCalculationsFromIngredient(ingredientsData)
+  }
+}
+
+const calcIngredientsFromRecipeQuantityHelper = ({ _recipeInstance, knownRecipeQuantity, setIngredientsCalculationsFromRecipeQuantity }) => {
+  return () => {
+    const ingredientsData = _recipeInstance.calcFromTot(knownRecipeQuantity)
+    setIngredientsCalculationsFromRecipeQuantity(ingredientsData)
   }
 }
 
