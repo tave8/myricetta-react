@@ -7,6 +7,9 @@ import Recipe from "../assets/js/Recipe"
 const RecipeComponent = (props) => {
   const [recipeName, setRecipeName] = useState("")
   const [ingredients, setIngredients] = useState([])
+  // the new ingredient that is being added
+  const [newIngredientName, setNewIngredientName] = useState("")
+  const [newIngredientQuantity, setNewIngredientQuantity] = useState(1)
 
   return (
     // centers content in the page
@@ -25,8 +28,8 @@ const RecipeComponent = (props) => {
                 placeholder="Nome ricetta"
                 value={recipeName}
                 onChange={(event) => {
-                  const newRecipeName = event.target.value
-                  setRecipeName(newRecipeName)
+                  const val = event.target.value
+                  setRecipeName(val)
                 }}
               />
             </Form.Group>
@@ -36,12 +39,28 @@ const RecipeComponent = (props) => {
             <Row>
               <Col xs={6}>
                 <Form.Group>
-                  <Form.Control type="text" placeholder="Ingrediente" />
+                  <Form.Control
+                    type="text"
+                    placeholder="Ingrediente"
+                    value={newIngredientName}
+                    onChange={(event) => {
+                      const val = event.target.value
+                      setNewIngredientName(val)
+                    }}
+                  />
                 </Form.Group>
               </Col>
               <Col xs={3}>
                 <Form.Group>
-                  <Form.Control type="number" placeholder="Quantità (g)" />
+                  <Form.Control
+                    type="number"
+                    placeholder="Quantità (g)"
+                    value={newIngredientQuantity}
+                    onChange={(event) => {
+                      const val = event.target.value
+                      setNewIngredientQuantity(val)
+                    }}
+                  />
                 </Form.Group>
               </Col>
               <Col xs={3} className="text-end">
