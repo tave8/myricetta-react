@@ -211,6 +211,10 @@ const RecipeComponent = (props) => {
               </Col>
             </Row>
           </Col>
+          {/* RECIPE ACTIONS (save recipe, etc.) */}
+          <Col>
+              <Button variant="success">Aggiungi ricetta</Button>
+          </Col>
           {/* FROM 1 INGREDIENT, CALCULATE THE OTHERS */}
           <Col>
             <Row className="flex-column g-3">
