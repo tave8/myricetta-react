@@ -488,6 +488,13 @@ const addIngredientHelper = ({
   setIngredientsCalculationsFromRecipeQuantity,
 }) => {
   return () => {
+    // validation
+    const isIngredientNameEmpty = newIngredientName.trim() == ""
+    if (isIngredientNameEmpty) {
+      alert("Nome ingrediente non può essere vuoto.")
+      return 
+    }
+
     // empty the new ingredient inputs
     setNewIngredientName("")
     setNewIngredientQuantity(1)
