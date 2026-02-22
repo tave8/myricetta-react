@@ -51,64 +51,68 @@ export default class Recipe extends Helper {
    * I have one ingredient and its quantity, I want the quantity of all other ingredients
    */
   calcFromIngredient({ name: _knownIngredientName, quantity: _knownIngredientQuantity }) {
+    const ingredientsList = []
+    let totIngredients = 0
+
+    let knownIngredientName
+    let knownIngredientQuantity
+
+    // INGREDIENT NAME VALIDATION
     try {
-      const ingredientsList = []
-      let totIngredients = 0
-
-      const knownIngredientName = this.normalizeString(_knownIngredientName)
-      const knownIngredientQuantity = this.normalizeNumber(_knownIngredientQuantity)
-
-      // quantity is not a number
-      if (!this.constructor.isNumber(knownIngredientQuantity)) {
-        throw new QuantityIsNotNumberError(`In method "calcFromIngredient" with 
-                                          input ingredient "${_knownIngredientName}", 
-                                          input quantity "${_knownIngredientQuantity}"`)
+      knownIngredientName = this.normalizeString(_knownIngredientName)
+      // ingredient name is not valid
+      if (!this.constructor.isValidIngredientName(knownIngredientName)) {
+        throw new IngredientNameIsNotValidError(_knownIngredientName)
       }
+    } catch (_) {
+      throw new IngredientNameIsNotValidError(_knownIngredientName)
+    }
 
-      // ingredient does not exist
-      if (!this.existsIngredientByName(knownIngredientName)) {
-        throw new IngredientNameNotFoundError(`The ingredient "${knownIngredientName}" has not been found.`)
+    // INGREDIENT QUANTITY VALIDATION
+    try {
+      knownIngredientQuantity = this.normalizeNumber(_knownIngredientQuantity)
+      if (!this.constructor.isValidQuantity(knownIngredientQuantity)) {
+        throw new QuantityIsNotValidError(_knownIngredientQuantity)
       }
+    } catch (_) {
+      throw new QuantityIsNotValidError(_knownIngredientQuantity)
+    }
 
-      const recipeQuantityTotal = this.getRecipeQuantityFromIngredientInfo({
-        name: knownIngredientName,
-        quantity: knownIngredientQuantity,
+    // ingredient does not exist
+    if (!this.existsIngredientByName(knownIngredientName)) {
+      throw new IngredientNameNotFoundError(knownIngredientName)
+    }
+
+    const recipeQuantityTotal = this.getRecipeQuantityFromIngredientInfo({
+      name: knownIngredientName,
+      quantity: knownIngredientQuantity,
+    })
+
+    // create the result
+    this.ingredients.forEach((ingredient) => {
+      // moltiplicando la quantitÃ  totale con la proporzione del singolo ingrediente,
+      // ricavo finalmente la quantitÃ  di ogni altro ingrediente, oltre all'ingrediente dato
+      const ingredientProportion = ingredient.getProportion()
+      const newIngredientQuantity = recipeQuantityTotal * ingredientProportion
+      const newIngredientQuantityRounded = this.constructor.roundQuantity(newIngredientQuantity)
+
+      ingredientsList.push({
+        id: ingredient.getId(),
+        name: ingredient.getName(),
+        proportion: ingredientProportion,
+        quantity: newIngredientQuantity,
+        quantityRounded: newIngredientQuantityRounded,
+        percentageRounded: ingredient.getPercentageRounded(),
       })
 
-      // create the result
-      this.ingredients.forEach((ingredient) => {
-        // moltiplicando la quantitÃ  totale con la proporzione del singolo ingrediente,
-        // ricavo finalmente la quantitÃ  di ogni altro ingrediente, oltre all'ingrediente dato
-        const ingredientProportion = ingredient.getProportion()
-        const newIngredientQuantity = recipeQuantityTotal * ingredientProportion
-        const newIngredientQuantityRounded = this.constructor.roundQuantity(newIngredientQuantity)
+      totIngredients += newIngredientQuantity
+    })
 
-        ingredientsList.push({
-          id: ingredient.getId(),
-          name: ingredient.getName(),
-          proportion: ingredientProportion,
-          quantity: newIngredientQuantity,
-          quantityRounded: newIngredientQuantityRounded,
-          percentageRounded: ingredient.getPercentageRounded(),
-        })
+    const totIngredientsRounded = this.constructor.roundQuantity(totIngredients)
 
-        totIngredients += newIngredientQuantity
-      })
-
-      const totIngredientsRounded = this.constructor.roundQuantity(totIngredients)
-
-      return {
-        ingredients: ingredientsList,
-        totIngredientsRounded,
-      }
-    } catch (err) {
-      if (err instanceof StringIsNotStringError || err instanceof NumberIsNotNumberError) {
-        throw new err()
-      } else {
-        throw new err()
-        console.error(err)
-        alert("Unknown error")
-      }
+    return {
+      ingredients: ingredientsList,
+      totIngredientsRounded,
     }
   }
 
@@ -122,12 +126,16 @@ export default class Recipe extends Helper {
     const ingredientsList = []
     let totIngredients = 0
 
-    const knownRecipeQuantity = parseFloat(_knownRecipeQuantity)
+    let knownRecipeQuantity
 
-    // quantity is not a number
-    if (!this.constructor.isNumber(knownRecipeQuantity)) {
-      throw new QuantityIsNotNumberError(`In method "calcFromTot" with 
-                                          input recipe quantity "${_knownRecipeQuantity}"`)
+    // RECIPE QUANTITY VALIDATION
+    try {
+      knownRecipeQuantity = this.normalizeNumber(_knownRecipeQuantity)
+      if (!this.constructor.isValidQuantity(knownRecipeQuantity)) {
+        throw new QuantityIsNotValidError(_knownRecipeQuantity)
+      }
+    } catch (_) {
+      throw new QuantityIsNotValidError(_knownRecipeQuantity)
     }
 
     this.ingredients.forEach((ingredient) => {
@@ -160,18 +168,29 @@ export default class Recipe extends Helper {
    * is knowing the recipe total quantity.
    */
   getRecipeQuantityFromIngredientInfo({ name: _knownIngredientName, quantity: _knownIngredientQuantity }) {
-    const knownIngredientName = _knownIngredientName
-    const knownIngredientQuantity = parseFloat(_knownIngredientQuantity)
+    let knownIngredientName
+    let knownIngredientQuantity
 
-    // quantity is not a number
-    if (!this.constructor.isNumber(knownIngredientQuantity)) {
-      throw new QuantityIsNotNumberError(`Quantity "${knownIngredientQuantity}" must be a number, 
-                                          it is of type "${typeof knownIngredientQuantity}" instead.`)
+    // INGREDIENT NAME VALIDATION
+    try {
+      knownIngredientName = this.normalizeString(_knownIngredientName)
+    } catch (_) {
+      throw new IngredientNameIsNotValidError(_knownIngredientName)
+    }
+
+    // INGREDIENT QUANTITY VALIDATION
+    try {
+      knownIngredientQuantity = this.normalizeNumber(_knownIngredientQuantity)
+      if (!this.constructor.isValidQuantity(knownIngredientQuantity)) {
+        throw new QuantityIsNotValidError(_knownIngredientQuantity)
+      }
+    } catch (_) {
+      throw new QuantityIsNotValidError(_knownIngredientQuantity)
     }
 
     // ingredient does not exist
     if (!this.existsIngredientByName(knownIngredientName)) {
-      throw new IngredientNameNotFoundError(`The ingredient "${knownIngredientName}" has not been found.`)
+      throw new IngredientNameNotFoundError(knownIngredientName)
     }
 
     // trova proporzione dell'ingrediente noto, dalle proporzioni personalizzate
@@ -194,12 +213,21 @@ export default class Recipe extends Helper {
     return recipeQuantityTotal
   }
 
-  getIngredientProportionByName(ingredientName, throwsIfIngredientNameNotFound = true) {
+  getIngredientProportionByName(_ingredientName, throwsIfIngredientNameNotFound = true) {
+    let ingredientName
+
+    // INGREDIENT NAME VALIDATION
+    try {
+      ingredientName = this.normalizeString(_ingredientName)
+    } catch (_) {
+      throw new IngredientNameIsNotValidError(_ingredientName)
+    }
+
     const ingredient = this.getIngredientByName(ingredientName)
     const existsIngredient = ingredient !== undefined
 
     if (!existsIngredient && throwsIfIngredientNameNotFound) {
-      throw new IngredientNameNotFoundError(`The ingredient "${ingredientName}" has not been found.`)
+      throw new IngredientNameNotFoundError(ingredientName)
     }
 
     return ingredient.getProportion()
@@ -208,7 +236,16 @@ export default class Recipe extends Helper {
   /**
    * Returns undefined if ingredient is not found
    */
-  getIngredientByName(ingredientName) {
+  getIngredientByName(_ingredientName) {
+    let ingredientName
+
+    // INGREDIENT NAME VALIDATION
+    try {
+      ingredientName = this.normalizeString(_ingredientName)
+    } catch (_) {
+      throw new IngredientNameIsNotValidError(_ingredientName)
+    }
+
     return this.ingredients.find((ingredient) => ingredientName === ingredient.name)
   }
 
@@ -312,7 +349,16 @@ export default class Recipe extends Helper {
     return ingredient
   }
 
-  existsIngredientByName(ingredientName) {
+  existsIngredientByName(_ingredientName) {
+    let ingredientName
+
+    // INGREDIENT NAME VALIDATION
+    try {
+      ingredientName = this.normalizeString(_ingredientName)
+    } catch (_) {
+      throw new IngredientNameIsNotValidError(_ingredientName)
+    }
+
     const item = this.getIngredientByName(ingredientName)
     const exists = item !== undefined
     return exists
@@ -347,7 +393,17 @@ export default class Recipe extends Helper {
   //   // console.log(ingredient)
   // }
 
-  removeIngredientByName(ingredientName) {
+  removeIngredientByName(_ingredientName) {
+    let ingredientName
+
+    // INGREDIENT NAME VALIDATION
+    try {
+      ingredientName = this.normalizeString(_ingredientName)
+    } catch (_) {
+      throw new IngredientNameIsNotValidError(_ingredientName)
+    }
+
+    // exists ingredient
     if (!this.existsIngredientByName(ingredientName)) {
       throw new IngredientNameNotFoundError(`No ingredient "${ingredientName}" has been found, so it cannot be removed.`)
     }
@@ -380,10 +436,19 @@ export default class Recipe extends Helper {
     return this.id
   }
 
-  setName(recipeName) {
-    if (!this.constructor.isValidRecipeName(recipeName)) {
-      throw new RecipeNameIsNotValidError(`Recipe name "${recipeName}" is not valid.`)
+  setName(_recipeName) {
+    let recipeName
+
+    // RECIPE NAME VALIDATION
+    try {
+      recipeName = this.normalizeString(_recipeName)
+      if (!this.constructor.isValidRecipeName(recipeName)) {
+        throw new RecipeNameIsNotValidError(recipeName)
+      }
+    } catch (_) {
+      throw new RecipeNameIsNotValidError(_recipeName)
     }
+
     this.name = recipeName
   }
 
