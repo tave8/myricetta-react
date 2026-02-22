@@ -6,7 +6,7 @@ import Recipe from "../assets/js/Recipe/Recipe"
 import {
   IngredientNameAlreadyExistsError,
   IngredientNameIsNotValidError,
-  QuantityIsNotNumberError,
+  QuantityIsNotValidError,
   RecipeHasNoIngredientsError,
   RecipeNameIsNotValidError,
 } from "../assets/js/Recipe/errors"
@@ -529,8 +529,8 @@ const addIngredientHelper = ({
     } catch (err) {
       if (err instanceof IngredientNameIsNotValidError) {
         alert("Nome ingrediente non può essere vuoto.")
-      } else if (err instanceof QuantityIsNotNumberError) {
-        alert("La quantità deve essere un numero.")
+      } else if (err instanceof QuantityIsNotValidError) {
+        alert("La quantità deve essere un numero positivo.")
       } else if (err instanceof IngredientNameAlreadyExistsError) {
         alert("Non puoi avere ingredienti con lo stesso nome.")
       } else {

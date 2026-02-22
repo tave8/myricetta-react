@@ -40,8 +40,23 @@ export default class Helper {
     return y
   }
 
+  /**
+   * Quantity is x, where x > 0 and x is integer.
+   */
+  static isValidQuantity(x) {
+    return this.isPositiveNumber(x) && x != 0
+  }
+
   static isNumber(x) {
     return Number.isFinite(x)
+  }
+
+  static isPositiveNumber(x) {
+    return this.isNumber(x) && x >= 0
+  }
+
+  static isIntegerNumber(x) {
+    return Number.isInteger(x)
   }
 
   static isValidIngredientName(x) {

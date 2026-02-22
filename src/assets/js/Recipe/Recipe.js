@@ -4,12 +4,12 @@ import {
   IngredientNameNotFoundError,
   IngredientIdNotFoundError,
   IngredientNameAlreadyExistsError,
-  QuantityIsNotNumberError,
   IngredientNameIsNotValidError,
   RecipeNameIsNotValidError,
   RecipeHasNoIngredientsError,
   StringIsNotStringError,
   NumberIsNotNumberError,
+  QuantityIsNotValidError,
 } from "./errors"
 
 const defaultConfig = {
@@ -274,31 +274,30 @@ export default class Recipe extends Helper {
     let ingredientName
     let ingredientQuantity
 
+    // INGREDIENT NAME VALIDATION
     try {
       ingredientName = this.normalizeString(_ingredientName)
+      // ingredient name is not valid
+      if (!this.constructor.isValidIngredientName(ingredientName)) {
+        throw new IngredientNameIsNotValidError(_ingredientName)
+      }
     } catch (_) {
       throw new IngredientNameIsNotValidError(_ingredientName)
     }
 
+    // INGREDIENT QUANTITY VALIDATION
     try {
       ingredientQuantity = this.normalizeNumber(_ingredientQuantity)
+      if (!this.constructor.isValidQuantity(ingredientQuantity)) {
+        throw new QuantityIsNotValidError(_ingredientQuantity)
+      }
     } catch (_) {
-      throw new QuantityIsNotNumberError(_ingredientQuantity)
+      throw new QuantityIsNotValidError(_ingredientQuantity)
     }
 
-    // ingredient name is not valid
-    if (!this.constructor.isValidIngredientName(ingredientName)) {
-      throw new IngredientNameIsNotValidError(`Ingredient name "${ingredientName}" is not valid.`)
-    }
-
-    // quantity is not a number
-    if (!this.constructor.isNumber(ingredientQuantity)) {
-      throw new QuantityIsNotNumberError(`In method "addIngredient", quantity with value "${ingredientQuantity}" must be a number and it is not.`)
-    }
-
-    // ingredient name already exists
+    // ingredient name already exists?
     if (this.existsIngredientByName(ingredientName)) {
-      throw new IngredientNameAlreadyExistsError(`An ingredient with the same name as "${ingredientName}" already exists, so it cannot be added.`)
+      throw new IngredientNameAlreadyExistsError(ingredientName)
     }
 
     // add ingredient to recipe

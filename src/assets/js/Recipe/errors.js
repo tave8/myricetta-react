@@ -58,13 +58,13 @@ export class IngredientNameIsNotValidError extends Error {
   }
 }
 
-export class QuantityIsNotNumberError extends Error {
+export class QuantityIsNotValidError extends Error {
   constructor(userMessage = "") {
     let newUserMessage = userMessage
     if (userMessage == null || userMessage == undefined) {
       newUserMessage = "<user message was nully>"
     }
-    const initialMessage = "Quantity is not a number. "
+    const initialMessage = "Quantity is not valid. "
     const finalMessage = (newUserMessage.toString() + initialMessage).trim()
     super(finalMessage)
   }
