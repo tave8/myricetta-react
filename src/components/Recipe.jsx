@@ -177,8 +177,8 @@ const RecipeComponent = (props) => {
                   <thead>
                     <tr>
                       <th>Ingr.</th>
-                      <th>Q.tà</th>
-                      <th>%</th>
+                      <th className="text-end">Q.tà</th>
+                      <th className="text-end">%</th>
                       <th className="text-end">Azioni</th>
                     </tr>
                   </thead>
@@ -188,8 +188,8 @@ const RecipeComponent = (props) => {
                       return (
                         <tr key={ingredient.id}>
                           <td>{ingredient.name}</td>
-                          <td>{ingredient.quantityRounded}</td>
-                          <td>{ingredient.percentageRounded}</td>
+                          <td className="text-end">{ingredient.quantityRounded} g</td>
+                          <td className="text-end">{ingredient.percentageRounded} %</td>
                           <td className="text-end">
                             <Button
                               variant="danger"
@@ -229,7 +229,7 @@ const RecipeComponent = (props) => {
                     {ingredientsCalculations?.ingredients.length > 0 && (
                       <tr className="fw-bold">
                         <td className="text-end">TOTALE:</td>
-                        <td>{ingredientsCalculations.totIngredientsRounded}</td>
+                        <td className="text-end">{ingredientsCalculations.totIngredientsRounded} g</td>
                       </tr>
                     )}
                   </tfoot>
@@ -265,7 +265,7 @@ const RecipeComponent = (props) => {
               </Col>
               {/* known ingredient (name, quantity) */}
               <Col>
-                <Row>
+                <Row className="g-3">
                   {/* known ingredient quantity */}
                   <Col xs={4}>
                     <Form.Group>
@@ -276,12 +276,18 @@ const RecipeComponent = (props) => {
                         onChange={(event) => {
                           const val = event.target.value
                           setKnownIngredientQuantity(val)
-                          const context = { _recipeInstance, knownIngredientName, knownIngredientQuantity: val, setIngredientsCalculationsFromIngredient }
+                          const context = {
+                            _recipeInstance,
+                            knownIngredientName,
+                            knownIngredientQuantity: val,
+                            setIngredientsCalculationsFromIngredient,
+                          }
                           calcIngredientsFromOneIngredientHelper(context)()
                         }}
                       />
                     </Form.Group>
                   </Col>
+
                   {/* known ingredient name */}
                   <Col xs={8}>
                     <Form.Group>
@@ -289,21 +295,38 @@ const RecipeComponent = (props) => {
                         value={knownIngredientName}
                         onChange={(event) => {
                           const val = event.target.value
+                          const isOptionEmpty = val.trim() == ""
                           setKnownIngredientName(val)
-                          const context = { _recipeInstance, knownIngredientName: val, knownIngredientQuantity, setIngredientsCalculationsFromIngredient }
+                          if (isOptionEmpty) {
+                            setKnownIngredientQuantity(1)
+                          }
+
+                          const context = {
+                            _recipeInstance,
+                            knownIngredientName: val,
+                            knownIngredientQuantity,
+                            setIngredientsCalculationsFromIngredient,
+                          }
                           calcIngredientsFromOneIngredientHelper(context)()
                         }}
                       >
-                        <option value="">Seleziona ingrediente</option>
-                        {ingredientsCalculations?.ingredients.map((ingredient) => {
-                          return (
-                            <option key={ingredient.id} value={ingredient.name}>
-                              {ingredient.name}
-                            </option>
-                          )
-                        })}
+                        <option value="">Seleziona ingrediente...</option>
+                        {ingredientsCalculations?.ingredients.map((ingredient) => (
+                          <option key={ingredient.id} value={ingredient.name}>
+                            {ingredient.name}
+                          </option>
+                        ))}
                       </Form.Select>
                     </Form.Group>
+                  </Col>
+
+                  {/* Frase */}
+                  <Col xs={12}>
+                    {knownIngredientQuantity && knownIngredientName && (
+                      <div className="fw-bold">
+                        Per {knownIngredientQuantity} g di {knownIngredientName} mi servono:
+                      </div>
+                    )}
                   </Col>
                 </Row>
               </Col>
@@ -332,7 +355,7 @@ const RecipeComponent = (props) => {
                             return (
                               <tr key={ingredient.id} className={isIngredientInListSameAsKnownIngredient ? "table-primary" : ""}>
                                 <td>{ingredient.name}</td>
-                                <td className="text-end">{ingredient.quantityRounded}</td>
+                                <td className="text-end">{ingredient.quantityRounded} g</td>
                               </tr>
                             )
                           })}
@@ -348,7 +371,7 @@ const RecipeComponent = (props) => {
                           {ingredientsCalculationsFromIngredient?.ingredients.length > 0 && (
                             <tr className="text-end fw-bold">
                               <td>TOTALE:</td>
-                              <td>{ingredientsCalculationsFromIngredient.totIngredientsRounded}</td>
+                              <td>{ingredientsCalculationsFromIngredient.totIngredientsRounded} g</td>
                             </tr>
                           )}
                         </tfoot>
@@ -368,7 +391,7 @@ const RecipeComponent = (props) => {
               </Col>
               {/* known recipe (quantity) */}
               <Col>
-                <Row className="">
+                <Row className="g-3">
                   {/* known recipe quantity */}
                   <Col xs={12} md={6}>
                     <Form.Group>
@@ -384,6 +407,14 @@ const RecipeComponent = (props) => {
                         }}
                       />
                     </Form.Group>
+                  </Col>
+                  {/* frase */}
+                  <Col xs={12}>
+                    {knownRecipeQuantity && (
+                      <div className="fw-bold">
+                        Per {knownRecipeQuantity} g di impasto mi servono:
+                      </div>
+                    )}
                   </Col>
                 </Row>
               </Col>
@@ -411,7 +442,7 @@ const RecipeComponent = (props) => {
                           return (
                             <tr key={ingredient.id}>
                               <td>{ingredient.name}</td>
-                              <td className="text-end">{ingredient.quantityRounded}</td>
+                              <td className="text-end">{ingredient.quantityRounded} g</td>
                             </tr>
                           )
                         })}
@@ -427,7 +458,7 @@ const RecipeComponent = (props) => {
                         {ingredientsCalculationsFromRecipeQuantity?.ingredients.length > 0 && (
                           <tr className="table-primary fw-bold">
                             <td className="text-end">TOTALE:</td>
-                            <td className="text-end">{ingredientsCalculationsFromRecipeQuantity.totIngredientsRounded}</td>
+                            <td className="text-end">{ingredientsCalculationsFromRecipeQuantity.totIngredientsRounded} g</td>
                           </tr>
                         )}
                       </tfoot>
@@ -492,7 +523,7 @@ const addIngredientHelper = ({
     const isIngredientNameEmpty = newIngredientName.trim() == ""
     if (isIngredientNameEmpty) {
       alert("Nome ingrediente non può essere vuoto.")
-      return 
+      return
     }
 
     // empty the new ingredient inputs
