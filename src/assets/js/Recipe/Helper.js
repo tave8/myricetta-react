@@ -1,4 +1,4 @@
-import { IsNotStringError, NumberIsNotNumberError } from "./errors"
+import { StringIsNotStringError, NumberIsNotNumberError } from "./errors"
 
 /**
  * Helper class for Recipe and Ingredient.
@@ -9,6 +9,33 @@ import { IsNotStringError, NumberIsNotNumberError } from "./errors"
  *  this.constructor.isNumber(57)
  */
 export default class Helper {
+  /**
+   * Default format: lowercase with no lateral whitespace
+   * Example:
+   *    " Good Pizza" --> "good pizza"
+   */
+  static normalizeString(x) {
+    if (!this.isString(x)) {
+      throw new StringIsNotStringError(`During normalizing input to string, param "${x}" is expected to be string, 
+                                      it is of type "${typeof x}" instead.`)
+    }
+    return x.trim().toLowerCase()
+  }
+
+  /**
+   * Input type: string that can be converted to number type, or number type.
+   *     4  -->  4  (number to number)
+   *    "4" -->  4  (string to number)
+   */
+  static normalizeNumber(x) {
+    const y = parseFloat(x)
+    if (!this.isNumber(y)) {
+      throw new NumberIsNotNumberError(`During normalizing input to number, param "${x}" is expected to be number, 
+                                       it is of type "${typeof x}" instead.`)
+    }
+    return y
+  }
+
   static isNumber(x) {
     return Number.isFinite(x)
   }
@@ -27,7 +54,7 @@ export default class Helper {
 
   static isEmptyString(x) {
     if (!this.isString(x)) {
-      throw new IsNotStringError(`Ingredient name must be of type string, it is of type "${typeof x}" instead.`)
+      throw new StringIsNotStringError(`String expected, but param "${x}" is of type "${typeof x}" instead.`)
     }
     return x.trim() == ""
   }

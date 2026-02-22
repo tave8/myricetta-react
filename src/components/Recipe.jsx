@@ -488,7 +488,9 @@ const addRecipeHelper = ({
       const sanitizedRecipeName = sanitizeRecipeName(recipeName)
       _recipeInstance.setName(sanitizedRecipeName)
       const recipeToSave = _recipeInstance.getRecipeToSave()
+
       console.log(recipeToSave)
+      console.log(_recipeInstance.getIngredients())
     } catch (err) {
       if (err instanceof RecipeNameIsNotValidError) {
         alert("Inserisci il nome della ricetta")
@@ -516,7 +518,7 @@ const addIngredientHelper = ({
   return () => {
     try {
       _recipeInstance.addIngredient({
-        name: sanitizeIngredientName(newIngredientName),
+        name: newIngredientName,
         quantity: newIngredientQuantity,
       })
       // empty the new ingredient inputs

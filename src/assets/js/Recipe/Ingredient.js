@@ -1,7 +1,12 @@
 import Helper from "./Helper"
 
+const defaultConfig = {
+  normalizeStrings: true,
+  normalizeNumbers: true,
+}
+
 export default class Ingredient extends Helper {
-  constructor({ name, quantity, recipe }) {
+  constructor({ name, quantity, recipe }, config = defaultConfig) {
     super()
     this.id = this.constructor.generateId()
     this.name = name
@@ -10,6 +15,8 @@ export default class Ingredient extends Helper {
     this.quantityMultiplied = quantity
     this.quantityMultipliedRounded = this.getQuantityMultipliedRounded()
     this.recipe = recipe
+
+    this.config = { ...defaultConfig, ...config }
   }
 
   // SETTERS

@@ -1,4 +1,4 @@
-export class IsNotStringError extends Error {
+export class StringIsNotStringError extends Error {
   constructor(userMessage) {
     const initialMessage = "A generic element must be a string and it is not. "
     const finalMessage = (userMessage + initialMessage).trim()

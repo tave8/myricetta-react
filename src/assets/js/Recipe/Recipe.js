@@ -8,17 +8,33 @@ import {
   IngredientNameIsNotValidError,
   RecipeNameIsNotValidError,
   RecipeHasNoIngredientsError,
+  StringIsNotStringError,
+  NumberIsNotNumberError,
 } from "./errors"
+
+const defaultConfig = {
+  normalizeStrings: true,
+  normalizeNumbers: true,
+}
 
 /**
  * ### Recipe
  */
 export default class Recipe extends Helper {
-  constructor() {
+  constructor(config = defaultConfig) {
     super()
     this.id = this.constructor.generateId()
     this.ingredients = []
+    this.config = { ...defaultConfig, ...config }
     // this.overridden = false
+  }
+
+  normalizeString(x) {
+    return this.config.normalizeStrings ? this.constructor.normalizeString(x) : x
+  }
+
+  normalizeNumber(x) {
+    return this.config.normalizeNumbers ? this.constructor.normalizeNumber(x) : x
   }
 
   /**
@@ -237,34 +253,47 @@ export default class Recipe extends Helper {
    * Throws an error if ingredient with the input name already exists.
    */
   addIngredient({ name: _ingredientName, quantity: _ingredientQuantity }) {
-    const ingredientName = _ingredientName
-    const ingredientQuantity = parseFloat(_ingredientQuantity)
+    try {
+      const ingredientName = this.normalizeString(_ingredientName)
+      const ingredientQuantity = this.normalizeNumber(_ingredientQuantity)
 
-    // ingredient name is not valid
-    if (!this.constructor.isValidIngredientName(ingredientName)) {
-      throw new IngredientNameIsNotValidError(`Ingredient name "${ingredientName}" is not valid.`)
+      // ingredient name is not valid
+      if (!this.constructor.isValidIngredientName(ingredientName)) {
+        throw new IngredientNameIsNotValidError(`Ingredient name "${ingredientName}" is not valid.`)
+      }
+
+      // quantity is not a number
+      if (!this.constructor.isNumber(ingredientQuantity)) {
+        throw new QuantityIsNotNumberError(`In method "addIngredient", quantity with value "${ingredientQuantity}" must be a number and it is not.`)
+      }
+
+      // ingredient name already exists
+      if (this.existsIngredientByName(ingredientName)) {
+        throw new IngredientNameAlreadyExistsError(`An ingredient with the same name as "${ingredientName}" already exists, so it cannot be added.`)
+      }
+
+      // add ingredient to recipe
+      const ingredient = new Ingredient({
+        name: ingredientName,
+        quantity: ingredientQuantity,
+        recipe: this,
+      })
+
+      this.ingredients.push(ingredient)
+
+      return ingredient
+    } catch (err) {
+      console.error(err)
+      if (err instanceof StringIsNotStringError) {
+        alert(`Param with value "${_ingredientName}" should have type string, 
+              has type "${typeof _ingredientName}", thus it cannot be normalized.`)
+      } else if (err instanceof NumberIsNotNumberError) {
+        alert(`Param with value "${_ingredientQuantity}" should have type number, 
+              has type "${typeof _ingredientQuantity}", thus it cannot be normalized.`)
+      } else {
+        alert("Unknown error")
+      }
     }
-
-    // quantity is not a number
-    if (!this.constructor.isNumber(ingredientQuantity)) {
-      throw new QuantityIsNotNumberError(`In method "addIngredient", quantity with value "${ingredientQuantity}" must be a number and it is not.`)
-    }
-
-    // ingredient name already exists
-    if (this.existsIngredientByName(ingredientName)) {
-      throw new IngredientNameAlreadyExistsError(`An ingredient with the same name as "${ingredientName}" already exists, so it cannot be added.`)
-    }
-
-    // add ingredient to recipe
-    const ingredient = new Ingredient({
-      name: ingredientName,
-      quantity: ingredientQuantity,
-      recipe: this,
-    })
-
-    this.ingredients.push(ingredient)
-
-    return ingredient
   }
 
   existsIngredientByName(ingredientName) {
