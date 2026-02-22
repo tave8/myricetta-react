@@ -1,4 +1,4 @@
-import { NumberIsNotNumberError } from "./errors"
+import { IngredientNameIsNotStringError, NumberIsNotNumberError } from "./errors"
 
 /**
  * Helper class for Recipe and Ingredient.
@@ -13,14 +13,20 @@ export default class Helper {
     return Number.isFinite(x)
   }
 
-  // static isEmptyString(x) {
-  //   const isString = typeof x == "string"
-  //   if (!isString) {
-  //     return false
-  //   }
-  //   const isEmpty = x.trim() == ""
-  //   return isEmpty
-  // }
+  static isValidIngredientName(x) {
+    return this.isString(x) && !this.isEmptyString(x)
+  }
+
+  static isString(x) {
+    return typeof x == "string"
+  }
+
+  static isEmptyString(x) {
+    if (!this.isString(x)) {
+      throw new IngredientNameIsNotStringError(`Ingredient name must be of type string, it is of type "${typeof x}" instead.`)
+    }
+    return x.trim() == ""
+  }
 
   /**
    * Round a number by n digits

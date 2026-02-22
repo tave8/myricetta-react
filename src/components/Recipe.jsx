@@ -3,7 +3,7 @@ import { Container, Row, Col, CardGroup, Card, Spinner, Alert, Button, Image, Fo
 import { Helmet } from "react-helmet"
 
 import Recipe from "../assets/js/Recipe/Recipe"
-import { IngredientNameAlreadyExistsError, QuantityIsNotNumberError } from "../assets/js/Recipe/errors"
+import { IngredientNameAlreadyExistsError, IngredientNameIsNotValidError, QuantityIsNotNumberError } from "../assets/js/Recipe/errors"
 
 const RecipeComponent = (props) => {
   // the Recipe instance. must not me touched.
@@ -514,30 +514,23 @@ const addIngredientHelper = ({
   setIngredientsCalculationsFromRecipeQuantity,
 }) => {
   return () => {
-    // validation
-    const isIngredientNameEmpty = newIngredientName.trim() == ""
-    if (isIngredientNameEmpty) {
-      alert("Nome ingrediente non può essere vuoto.")
-      return
-    }
-
-    // empty the new ingredient inputs
-    setNewIngredientName("")
-    setNewIngredientQuantity(1)
-    // input focus on ingredient name
-    focusNewIngredientName()
-
-    // add ingredient
     try {
       _recipeInstance.addIngredient({
         name: sanitizeIngredientName(newIngredientName),
         quantity: newIngredientQuantity,
       })
+      // empty the new ingredient inputs
+      setNewIngredientName("")
+      setNewIngredientQuantity(1)
+      // input focus on ingredient name
+      focusNewIngredientName()
     } catch (err) {
-      if (err instanceof IngredientNameAlreadyExistsError) {
-        alert("Non puoi avere ingredienti con lo stesso nome.")
+      if (err instanceof IngredientNameIsNotValidError) {
+        alert("Nome ingrediente non può essere vuoto.")
       } else if (err instanceof QuantityIsNotNumberError) {
         alert("La quantità deve essere un numero.")
+      } else if (err instanceof IngredientNameAlreadyExistsError) {
+        alert("Non puoi avere ingredienti con lo stesso nome.")
       } else {
         console.error(err)
       }

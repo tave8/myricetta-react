@@ -1,6 +1,12 @@
 import Ingredient from "./Ingredient"
 import Helper from "./Helper"
-import { IngredientNameNotFoundError, IngredientIdNotFoundError, IngredientNameAlreadyExistsError, QuantityIsNotNumberError, IngredientNameIsEmptyError } from "./errors"
+import {
+  IngredientNameNotFoundError,
+  IngredientIdNotFoundError,
+  IngredientNameAlreadyExistsError,
+  QuantityIsNotNumberError,
+  IngredientNameIsNotValidError,
+} from "./errors"
 
 /**
  * ### Recipe
@@ -225,16 +231,19 @@ export default class Recipe extends Helper {
     const ingredientName = _ingredientName
     const ingredientQuantity = parseFloat(_ingredientQuantity)
 
-    // if() {
-    //   throw new IngredientNameIsEmptyError("")
-    // }
-
-    if (this.existsIngredientByName(ingredientName)) {
-      throw new IngredientNameAlreadyExistsError(`An ingredient with the same name as "${ingredientName}" already exists, so it cannot be added.`)
+    // ingredient name is not valid
+    if (!this.constructor.isValidIngredientName(ingredientName)) {
+      throw new IngredientNameIsNotValidError(`Ingredient name "${ingredientName}" is not valid.`)
     }
 
-    if(!this.constructor.isNumber(ingredientQuantity)) {
+    // quantity is not a number
+    if (!this.constructor.isNumber(ingredientQuantity)) {
       throw new QuantityIsNotNumberError(`In method "addIngredient", quantity with value "${ingredientQuantity}" must be a number and it is not.`)
+    }
+
+    // ingredient name already exists
+    if (this.existsIngredientByName(ingredientName)) {
+      throw new IngredientNameAlreadyExistsError(`An ingredient with the same name as "${ingredientName}" already exists, so it cannot be added.`)
     }
 
     // add ingredient to recipe

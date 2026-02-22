@@ -22,9 +22,17 @@ export class IngredientNameAlreadyExistsError extends Error {
   }
 }
 
-export class IngredientNameIsEmptyError extends Error {
+export class IngredientNameIsNotValidError extends Error {
   constructor(userMessage) {
-    const initialMessage = "Ingredient name cannot be empty. "
+    const initialMessage = "Ingredient name is not valid. "
+    const finalMessage = (userMessage + initialMessage).trim()
+    super(finalMessage)
+  }
+}
+
+export class IngredientNameIsNotStringError extends Error {
+  constructor(userMessage) {
+    const initialMessage = "Ingredient name is not a string. "
     const finalMessage = (userMessage + initialMessage).trim()
     super(finalMessage)
   }
