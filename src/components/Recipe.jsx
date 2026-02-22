@@ -181,6 +181,7 @@ const RecipeComponent = (props) => {
                                   knownRecipeQuantity,
                                   setIngredientsCalculationsFromRecipeQuantity,
                                   setKnownIngredientName,
+                                  setKnownIngredientQuantity
                                 }
                                 const ingredientNameToRemove = ingredient.name
                                 removeIngredientHelper(context)(ingredientNameToRemove)
@@ -499,6 +500,7 @@ const removeIngredientHelper = ({
   knownIngredientQuantity,
   setIngredientsCalculationsFromIngredient,
   knownRecipeQuantity,
+  setKnownIngredientQuantity,
   setIngredientsCalculationsFromRecipeQuantity,
 }) => {
   return (ingredientNameToRemove) => {
@@ -510,6 +512,7 @@ const removeIngredientHelper = ({
     if (isIngredientSelected) {
       // if the ingredient is selected elsewhere, deselect it
       setKnownIngredientName("")
+      setKnownIngredientQuantity(1)
       removeIngredientAction({
         _recipeInstance,
         setIngredientsCalculations,
