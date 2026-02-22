@@ -180,6 +180,7 @@ const RecipeComponent = (props) => {
                                   setIngredientsCalculationsFromIngredient,
                                   knownRecipeQuantity,
                                   setIngredientsCalculationsFromRecipeQuantity,
+                                  setKnownIngredientName,
                                 }
                                 const ingredientNameToRemove = ingredient.name
                                 removeIngredientHelper(context)(ingredientNameToRemove)
@@ -493,6 +494,7 @@ const addIngredientHelper = ({
 const removeIngredientHelper = ({
   _recipeInstance,
   setIngredientsCalculations,
+  setKnownIngredientName,
   knownIngredientName,
   knownIngredientQuantity,
   setIngredientsCalculationsFromIngredient,
@@ -500,15 +502,52 @@ const removeIngredientHelper = ({
   setIngredientsCalculationsFromRecipeQuantity,
 }) => {
   return (ingredientNameToRemove) => {
+    const isIngredientSelected = isIngredientSelectedKnownIngredientName({ knownIngredientName })(ingredientNameToRemove)
     // you cannot remove an ingredient that has been selected elsewhere
     // for example: this ingredient the user wants to remove,
     // is the same known ingredient that the user wanted to
     // calculate the others from
-    if (isIngredientSelectedElsewhere({ knownIngredientName })(ingredientNameToRemove)) {
-      alert("Non puoi rimuovere questo ingrediente perché selezionato altrove.")
+    if (isIngredientSelected) {
+      // if the ingredient is selected elsewhere, deselect it
+      setKnownIngredientName("")
+      removeIngredientAction({
+        _recipeInstance,
+        setIngredientsCalculations,
+        setKnownIngredientName,
+        knownIngredientName: "",
+        knownIngredientQuantity,
+        setIngredientsCalculationsFromIngredient,
+        knownRecipeQuantity,
+        setIngredientsCalculationsFromRecipeQuantity,
+      })(ingredientNameToRemove)
       return
     }
-    // remove ingredient
+    // if the ingredient was not selected elsewhere, remove it immediately
+    removeIngredientAction({
+      _recipeInstance,
+      setIngredientsCalculations,
+      setKnownIngredientName,
+      knownIngredientName,
+      knownIngredientQuantity,
+      setIngredientsCalculationsFromIngredient,
+      knownRecipeQuantity,
+      setIngredientsCalculationsFromRecipeQuantity,
+    })(ingredientNameToRemove)
+  }
+}
+
+const removeIngredientAction = ({
+  _recipeInstance,
+  setIngredientsCalculations,
+  knownIngredientName,
+  knownIngredientQuantity,
+  setIngredientsCalculationsFromIngredient,
+  knownRecipeQuantity,
+  setIngredientsCalculationsFromRecipeQuantity,
+}) => {
+  return (ingredientNameToRemove) => {
+    // console.log(ingredientNameToRemove, _recipeInstance.ingredients)
+    // remove ingredient from recipe library instance
     _recipeInstance.removeIngredientByName(ingredientNameToRemove)
     // set new ingredients in the react component state
     setIngredientsCalculations(_recipeInstance.getIngredients())
@@ -547,7 +586,7 @@ const calcIngredientsFromRecipeQuantityHelper = ({ _recipeInstance, knownRecipeQ
   }
 }
 
-const isIngredientSelectedElsewhere = ({ knownIngredientName }) => {
+const isIngredientSelectedKnownIngredientName = ({ knownIngredientName }) => {
   return (ingredientNameToRemove) => {
     return ingredientNameToRemove == knownIngredientName
   }
