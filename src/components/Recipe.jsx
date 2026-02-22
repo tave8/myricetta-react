@@ -2,7 +2,8 @@ import { useState } from "react"
 import { Container, Row, Col, CardGroup, Card, Spinner, Alert, Button, Image, Form, ListGroup, Navbar, NavDropdown, Nav, Table } from "react-bootstrap"
 import { Helmet } from "react-helmet"
 
-import Recipe from "../assets/js/Recipe"
+import Recipe from "../assets/js/Recipe/Recipe"
+import { IngredientNameAlreadyExistsError, QuantityIsNotNumberError } from "../assets/js/Recipe/errors"
 
 const RecipeComponent = (props) => {
   // the Recipe instance. must not me touched.
@@ -409,13 +410,7 @@ const RecipeComponent = (props) => {
                     </Form.Group>
                   </Col>
                   {/* frase */}
-                  <Col xs={12}>
-                    {knownRecipeQuantity && (
-                      <div className="fw-bold">
-                        Per {knownRecipeQuantity} g di impasto mi servono:
-                      </div>
-                    )}
-                  </Col>
+                  <Col xs={12}>{knownRecipeQuantity && <div className="fw-bold">Per {knownRecipeQuantity} g di impasto mi servono:</div>}</Col>
                 </Row>
               </Col>
               {/* ingredients list */}
@@ -539,8 +534,13 @@ const addIngredientHelper = ({
         quantity: newIngredientQuantity,
       })
     } catch (err) {
-      console.error(err)
-      alert("Non puoi avere ingredienti con lo stesso nome.")
+      if (err instanceof IngredientNameAlreadyExistsError) {
+        alert("Non puoi avere ingredienti con lo stesso nome.")
+      } else if (err instanceof QuantityIsNotNumberError) {
+        alert("La quantità deve essere un numero.")
+      } else {
+        console.error(err)
+      }
       return
     }
 

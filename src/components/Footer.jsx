@@ -3,7 +3,7 @@ import { Container, Row, Col, CardGroup, Card, Spinner, Alert, Button, Image, Fo
 import { Helmet } from "react-helmet"
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom"
 
-import Recipe from "../assets/js/Recipe"
+import Recipe from "../assets/js/Recipe/Recipe"
 
 const FooterComponent = (props) => {
   return (
