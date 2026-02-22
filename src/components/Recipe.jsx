@@ -282,53 +282,55 @@ const RecipeComponent = (props) => {
                 </Row>
               </Col>
               {/* ingredients list */}
-              <Col>
-                <Row className="justify-content-center">
-                  <Col xs={12}>
-                    <Table striped bordered hover style={{ tableLayout: "fixed", width: "100%" }}>
-                      <colgroup>
-                        <col style={{ width: "70%" }} />
-                        <col style={{ width: "30%" }} />
-                      </colgroup>
+              {knownIngredientName != "" && (
+                <Col>
+                  <Row className="justify-content-center">
+                    <Col xs={12}>
+                      <Table striped bordered hover style={{ tableLayout: "fixed", width: "100%" }}>
+                        <colgroup>
+                          <col style={{ width: "70%" }} />
+                          <col style={{ width: "30%" }} />
+                        </colgroup>
 
-                      <thead>
-                        <tr>
-                          <th>Ingr.</th>
-                          <th className="text-end">Q.tà</th>
-                        </tr>
-                      </thead>
-
-                      <tbody>
-                        {/* exist ingredients */}
-                        {ingredientsCalculationsFromIngredient?.ingredients.map((ingredient) => {
-                          const isIngredientInListSameAsKnownIngredient = ingredient.name == knownIngredientName
-                          return (
-                            <tr key={ingredient.id} className={isIngredientInListSameAsKnownIngredient ? "table-primary" : ""}>
-                              <td>{ingredient.name}</td>
-                              <td className="text-end">{ingredient.quantityRounded}</td>
-                            </tr>
-                          )
-                        })}
-
-                        {/* no ingredients */}
-                        {(!ingredientsCalculationsFromIngredient || ingredientsCalculationsFromIngredient.ingredients.length == 0) && (
+                        <thead>
                           <tr>
-                            <td colSpan="3">Aggiungi il primo ingrediente</td>
+                            <th>Ingr.</th>
+                            <th className="text-end">Q.tà</th>
                           </tr>
-                        )}
-                      </tbody>
-                      <tfoot>
-                        {ingredientsCalculationsFromIngredient?.ingredients.length > 0 && (
-                          <tr className="text-end fw-bold">
-                            <td>TOTALE:</td>
-                            <td>{ingredientsCalculationsFromIngredient.totIngredientsRounded}</td>
-                          </tr>
-                        )}
-                      </tfoot>
-                    </Table>
-                  </Col>
-                </Row>
-              </Col>
+                        </thead>
+
+                        <tbody>
+                          {/* exist ingredients */}
+                          {ingredientsCalculationsFromIngredient?.ingredients.map((ingredient) => {
+                            const isIngredientInListSameAsKnownIngredient = ingredient.name == knownIngredientName
+                            return (
+                              <tr key={ingredient.id} className={isIngredientInListSameAsKnownIngredient ? "table-primary" : ""}>
+                                <td>{ingredient.name}</td>
+                                <td className="text-end">{ingredient.quantityRounded}</td>
+                              </tr>
+                            )
+                          })}
+
+                          {/* no ingredients */}
+                          {(!ingredientsCalculationsFromIngredient || ingredientsCalculationsFromIngredient.ingredients.length == 0) && (
+                            <tr>
+                              <td colSpan="3">Aggiungi il primo ingrediente</td>
+                            </tr>
+                          )}
+                        </tbody>
+                        <tfoot>
+                          {ingredientsCalculationsFromIngredient?.ingredients.length > 0 && (
+                            <tr className="text-end fw-bold">
+                              <td>TOTALE:</td>
+                              <td>{ingredientsCalculationsFromIngredient.totIngredientsRounded}</td>
+                            </tr>
+                          )}
+                        </tfoot>
+                      </Table>
+                    </Col>
+                  </Row>
+                </Col>
+              )}
             </Row>
           </Col>
           {/* FROM TOTAL RECIPE, CALCULATE INGREDIENTS */}
@@ -475,6 +477,7 @@ const addIngredientHelper = ({
     } catch (err) {
       console.error(err)
       alert("Non puoi avere ingredienti con lo stesso nome.")
+      return
     }
 
     // set new ingredients in the react component state
