@@ -31,10 +31,16 @@ export default class Recipe extends Helper {
     const knownIngredientName = _knownIngredientName
     const knownIngredientQuantity = parseFloat(_knownIngredientQuantity)
 
+    // quantity is not a number
     if (!this.constructor.isNumber(knownIngredientQuantity)) {
       throw new QuantityIsNotNumberError(`In method "calcFromIngredient" with 
                                           input ingredient "${_knownIngredientName}", 
                                           input quantity "${_knownIngredientQuantity}"`)
+    }
+
+    // ingredient does not exist
+    if (!this.existsIngredientByName(knownIngredientName)) {
+      throw new IngredientNameNotFoundError(`The ingredient "${knownIngredientName}" has not been found.`)
     }
 
     const recipeQuantityTotal = this.getRecipeQuantityFromIngredientInfo({
@@ -82,6 +88,7 @@ export default class Recipe extends Helper {
 
     const knownRecipeQuantity = parseFloat(_knownRecipeQuantity)
 
+    // quantity is not a number
     if (!this.constructor.isNumber(knownRecipeQuantity)) {
       throw new QuantityIsNotNumberError(`In method "calcFromTot" with 
                                           input recipe quantity "${_knownRecipeQuantity}"`)
@@ -116,35 +123,39 @@ export default class Recipe extends Helper {
    * The pre-requisite to calculating the ingredient quantities from one ingredient,
    * is knowing the recipe total quantity.
    */
-  getRecipeQuantityFromIngredientInfo({ name: ingredientName, quantity: ingredientQuantity }) {
-    try {
-      //   trova proporzione dell'ingrediente noto, dalle proporzioni personalizzate
-      const proportionKnown = this.getIngredientProportionByName(ingredientName)
-      // visto che il totale delle proporzioni sarÃ  sempre 1, allora
-      // la proporzione rimanente si ottiene sottraendo  1 - proporzioneNota
-      const proportionRemainingKnown = 1 - proportionKnown
-      // la quantita rimanente del totale
-      // si basa sulla seguente proporzione
-      // quantitaNota : quantitaRimanente = proporzioneNota : proporzioneNotaRimanente
-      // esempio:
-      // 10 g di sale stanno alla quantitÃ  di impasto che rimane, come la proporzione del sale (nel totale impasto)
-      // sta al totale delle proporzioni degli altri ingredienti
-      const recipeQuantityRemaining = (ingredientQuantity * proportionRemainingKnown) / proportionKnown
-      // alla fine, dalla quantita nota di un ingrediente, e dalle proporzioni della ricetta,
-      // si ricava la quantitÃ  totale di questo (nuovo?) impasto, non di quello dato
-      // prima dall'utente come input
-      const recipeQuantityTotal = ingredientQuantity + recipeQuantityRemaining
+  getRecipeQuantityFromIngredientInfo({ name: _knownIngredientName, quantity: _knownIngredientQuantity }) {
+    const knownIngredientName = _knownIngredientName
+    const knownIngredientQuantity = parseFloat(_knownIngredientQuantity)
 
-      return recipeQuantityTotal
-    } catch (err) {
-      if (err instanceof IngredientNameNotFoundError) {
-        alert(`The ingredient "${ingredientName}" was not found.`)
-        console.error(err)
-      } else {
-        alert("Unknown error.")
-        console.error("This error was not caught by any exception: ", err)
-      }
+    // quantity is not a number
+    if (!this.constructor.isNumber(knownIngredientQuantity)) {
+      throw new QuantityIsNotNumberError(`Quantity "${knownIngredientQuantity}" must be a number, 
+                                          it is of type "${typeof knownIngredientQuantity}" instead.`)
     }
+
+    // ingredient does not exist
+    if (!this.existsIngredientByName(knownIngredientName)) {
+      throw new IngredientNameNotFoundError(`The ingredient "${knownIngredientName}" has not been found.`)
+    }
+
+    // trova proporzione dell'ingrediente noto, dalle proporzioni personalizzate
+    const proportionKnown = this.getIngredientProportionByName(knownIngredientName)
+    // visto che il totale delle proporzioni sarÃ  sempre 1, allora
+    // la proporzione rimanente si ottiene sottraendo  1 - proporzioneNota
+    const proportionRemainingKnown = 1 - proportionKnown
+    // la quantita rimanente del totale
+    // si basa sulla seguente proporzione
+    // quantitaNota : quantitaRimanente = proporzioneNota : proporzioneNotaRimanente
+    // esempio:
+    // 10 g di sale stanno alla quantitÃ  di impasto che rimane, come la proporzione del sale (nel totale impasto)
+    // sta al totale delle proporzioni degli altri ingredienti
+    const recipeQuantityRemaining = (knownIngredientQuantity * proportionRemainingKnown) / proportionKnown
+    // alla fine, dalla quantita nota di un ingrediente, e dalle proporzioni della ricetta,
+    // si ricava la quantitÃ  totale di questo (nuovo?) impasto, non di quello dato
+    // prima dall'utente come input
+    const recipeQuantityTotal = knownIngredientQuantity + recipeQuantityRemaining
+
+    return recipeQuantityTotal
   }
 
   getIngredientProportionByName(ingredientName, throwsIfIngredientNameNotFound = true) {
