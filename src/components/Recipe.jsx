@@ -213,7 +213,22 @@ const RecipeComponent = (props) => {
           </Col>
           {/* RECIPE ACTIONS (save recipe, etc.) */}
           <Col>
-              <Button variant="success">Aggiungi ricetta</Button>
+            <Button
+              variant="success"
+              onClick={() => {
+                const context = {
+                  _recipeInstance,
+                  recipeName,
+                  ingredientsCalculations,
+                  knownIngredientName,
+                  knownIngredientQuantity,
+                  setIngredientsCalculationsFromIngredient,
+                }
+                addRecipeHelper(context)()
+              }}
+            >
+              Aggiungi ricetta
+            </Button>
           </Col>
           {/* FROM 1 INGREDIENT, CALCULATE THE OTHERS */}
           <Col>
@@ -398,6 +413,37 @@ const RecipeComponent = (props) => {
       </Col>
     </Row>
   )
+}
+
+const addRecipeHelper = ({
+  _recipeInstance,
+  recipeName,
+  ingredientsCalculations,
+  knownIngredientName,
+  knownIngredientQuantity,
+  setIngredientsCalculationsFromIngredient,
+}) => {
+  return () => {
+    // validation
+    const isRecipeNameEmpty = recipeName.trim() == ""
+    // const existsRecipeNameInDB
+
+    const hasNoIngredients = !ingredientsCalculations || ingredientsCalculations.ingredients.length == 0
+
+    if (isRecipeNameEmpty) {
+      alert("Inserisci il nome della ricetta")
+      return
+    }
+
+    if (hasNoIngredients) {
+      alert("Inserisci almeno un ingrediente.")
+      return
+    }
+
+    const sanitizedRecipeName = sanitizeRecipeName(recipeName)
+
+    console.log(sanitizedRecipeName, ingredientsCalculations)
+  }
 }
 
 const addIngredientHelper = ({
