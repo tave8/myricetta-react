@@ -1,4 +1,4 @@
-import { IngredientNameIsNotStringError, NumberIsNotNumberError } from "./errors"
+import { IsNotStringError, NumberIsNotNumberError } from "./errors"
 
 /**
  * Helper class for Recipe and Ingredient.
@@ -17,13 +17,17 @@ export default class Helper {
     return this.isString(x) && !this.isEmptyString(x)
   }
 
+  static isValidRecipeName(x) {
+    return this.isString(x) && !this.isEmptyString(x)
+  }
+
   static isString(x) {
     return typeof x == "string"
   }
 
   static isEmptyString(x) {
     if (!this.isString(x)) {
-      throw new IngredientNameIsNotStringError(`Ingredient name must be of type string, it is of type "${typeof x}" instead.`)
+      throw new IsNotStringError(`Ingredient name must be of type string, it is of type "${typeof x}" instead.`)
     }
     return x.trim() == ""
   }

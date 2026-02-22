@@ -3,7 +3,13 @@ import { Container, Row, Col, CardGroup, Card, Spinner, Alert, Button, Image, Fo
 import { Helmet } from "react-helmet"
 
 import Recipe from "../assets/js/Recipe/Recipe"
-import { IngredientNameAlreadyExistsError, IngredientNameIsNotValidError, QuantityIsNotNumberError } from "../assets/js/Recipe/errors"
+import {
+  IngredientNameAlreadyExistsError,
+  IngredientNameIsNotValidError,
+  QuantityIsNotNumberError,
+  RecipeHasNoIngredientsError,
+  RecipeNameIsNotValidError,
+} from "../assets/js/Recipe/errors"
 
 const RecipeComponent = (props) => {
   // the Recipe instance. must not me touched.
@@ -478,25 +484,19 @@ const addRecipeHelper = ({
   setIngredientsCalculationsFromIngredient,
 }) => {
   return () => {
-    // validation
-    const isRecipeNameEmpty = recipeName.trim() == ""
-    // const existsRecipeNameInDB
-
-    const hasNoIngredients = !ingredientsCalculations || ingredientsCalculations.ingredients.length == 0
-
-    if (isRecipeNameEmpty) {
-      alert("Inserisci il nome della ricetta")
+    try {
+      const sanitizedRecipeName = sanitizeRecipeName(recipeName)
+      _recipeInstance.setName(sanitizedRecipeName)
+      const recipeToSave = _recipeInstance.getRecipeToSave()
+      console.log(recipeToSave)
+    } catch (err) {
+      if (err instanceof RecipeNameIsNotValidError) {
+        alert("Inserisci il nome della ricetta")
+      } else if (err instanceof RecipeHasNoIngredientsError) {
+        alert("Inserisci almeno un ingrediente.")
+      }
       return
     }
-
-    if (hasNoIngredients) {
-      alert("Inserisci almeno un ingrediente.")
-      return
-    }
-
-    const sanitizedRecipeName = sanitizeRecipeName(recipeName)
-
-    console.log(sanitizedRecipeName, ingredientsCalculations)
   }
 }
 

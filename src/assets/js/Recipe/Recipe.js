@@ -6,6 +6,8 @@ import {
   IngredientNameAlreadyExistsError,
   QuantityIsNotNumberError,
   IngredientNameIsNotValidError,
+  RecipeNameIsNotValidError,
+  RecipeHasNoIngredientsError,
 } from "./errors"
 
 /**
@@ -183,10 +185,6 @@ export default class Recipe extends Helper {
     return this.ingredients.find((ingredient) => ingredientId === ingredient.id)
   }
 
-  setName(recipeName) {
-    this.name = recipeName
-  }
-
   /**
    * Get the up to date ingredients (ingredients list, recipe total quantity etc.)
    */
@@ -333,28 +331,45 @@ export default class Recipe extends Helper {
     return this.name
   }
 
+  getId() {
+    return this.id
+  }
+
+  setName(recipeName) {
+    if (!this.constructor.isValidRecipeName(recipeName)) {
+      throw new RecipeNameIsNotValidError(`Recipe name "${recipeName}" is not valid.`)
+    }
+    this.name = recipeName
+  }
+
   /**
-   *
+   * Get the data you need to save the recipe wherever you want.
+   * Checks will be done that the recipe is ready to be saved.
    */
-  // getRecipeToSave() {
-  //   const ingredientsList = []
-  //   const recipeData = {
-  //     id: this.id,
-  //     name: this.getName(),
-  //     ingredients: ingredientsList,
-  //   }
+  getRecipeToSave() {
+    // recipe has no ingredients
+    if (!this.recipeHasIngredients()) {
+      throw new RecipeHasNoIngredientsError()
+    }
 
-  //   this.ingredients.forEach((ingredient) => {
-  //     const ingredientInfo = {
-  //       name: ingredient.getName(),
-  //       proportion: ingredient.getProportion(),
-  //       quantity: ingredient.getQuantity(),
-  //     }
-  //     ingredientsList.push(ingredientInfo)
-  //   })
+    const ingredientsList = []
+    const recipeData = {
+      id: this.getId(),
+      name: this.getName(),
+      ingredients: ingredientsList,
+    }
 
-  //   return recipeData
-  // }
+    this.ingredients.forEach((ingredient) => {
+      const ingredientInfo = {
+        name: ingredient.getName(),
+        proportion: ingredient.getProportion(),
+        quantity: ingredient.getQuantity(),
+      }
+      ingredientsList.push(ingredientInfo)
+    })
+
+    return recipeData
+  }
 
   /**
    * Use this when you want to COMPLETELY override/overwrite
@@ -383,6 +398,10 @@ export default class Recipe extends Helper {
   // resetMultiplier() {
   //   this.multiplyIngredients(1)
   // }
+
+  recipeHasIngredients() {
+    return this.ingredients.length > 0
+  }
 }
 
 // USAGE
