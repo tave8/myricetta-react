@@ -9,6 +9,7 @@ const RecipeComponent = (props) => {
   const [_recipeInstance, _setRecipeInstance] = useState(new Recipe())
   // recipe info
   const [recipeName, setRecipeName] = useState("")
+  const [recipePhotoUrl, setRecipePhotoUrl] = useState("")
   // initial/original ingredients
   const [ingredientsCalculations, setIngredientsCalculations] = useState(null)
   // the new ingredient that is being added
@@ -26,24 +27,47 @@ const RecipeComponent = (props) => {
     // centers content in the page
     <Row className="justify-content-center">
       <Col xs={12} md={6}>
-        <Row className="flex-column g-3">
+        <Row className="flex-column gap-5">
           {/* PAGE TITLE */}
           <Col>
             <h2 className="text-center">Aggiungi ricetta</h2>
           </Col>
           {/* RECIPE INFO (name, photo etc.) */}
           <Col>
-            <Form.Group>
-              <Form.Control
-                type="text"
-                placeholder="Nome ricetta"
-                value={recipeName}
-                onChange={(event) => {
-                  const val = event.target.value
-                  setRecipeName(val)
-                }}
-              />
-            </Form.Group>
+            <Row className="justify-content-center">
+              {/* recipe name */}
+              <Col xs={12} md={6}>
+                <Form.Group>
+                  <Form.Control
+                    type="text"
+                    placeholder="Nome ricetta"
+                    value={recipeName}
+                    onChange={(event) => {
+                      const val = event.target.value
+                      setRecipeName(val)
+                    }}
+                  />
+                </Form.Group>
+              </Col>
+            </Row>
+            <Row className="mt-3">
+              {/*  */}
+              <Col>
+                <Row className="flex-column align-items-center g-3">
+                  <Col xs={12} md={6}>
+                    <Form.Group>
+                      <Form.Label>Carica foto</Form.Label>
+                      <Form.Control type="file" accept="image/*" onChange={handleRecipePhotoChange({ setRecipePhotoUrl })} />
+                    </Form.Group>
+                  </Col>
+                  {recipePhotoUrl && (
+                    <Col>
+                      <Image src={recipePhotoUrl} alt={recipeName} fluid style={{ height: "200px" }} />
+                    </Col>
+                  )}
+                </Row>
+              </Col>
+            </Row>
           </Col>
           {/* INITIAL/ORIGINAL INGREDIENTS (add ingredient, ingredients list) */}
           <Col>
@@ -181,7 +205,7 @@ const RecipeComponent = (props) => {
                                   knownRecipeQuantity,
                                   setIngredientsCalculationsFromRecipeQuantity,
                                   setKnownIngredientName,
-                                  setKnownIngredientQuantity
+                                  setKnownIngredientQuantity,
                                 }
                                 const ingredientNameToRemove = ingredient.name
                                 removeIngredientHelper(context)(ingredientNameToRemove)
@@ -586,6 +610,21 @@ const calcIngredientsFromRecipeQuantityHelper = ({ _recipeInstance, knownRecipeQ
   return () => {
     const ingredientsData = _recipeInstance.calcFromTot(knownRecipeQuantity)
     setIngredientsCalculationsFromRecipeQuantity(ingredientsData)
+  }
+}
+
+const handleRecipePhotoChange = ({ setRecipePhotoUrl }) => {
+  return (e) => {
+    const file = e.target.files[0]
+    if (!file) return
+
+    if (!file.type.startsWith("image/")) return
+
+    const reader = new FileReader()
+    reader.onloadend = () => {
+      setRecipePhotoUrl(reader.result)
+    }
+    reader.readAsDataURL(file)
   }
 }
 
