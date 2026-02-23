@@ -26,10 +26,10 @@ const RecipeComponent = (props) => {
   const [newIngredientQuantity, setNewIngredientQuantity] = useState(1)
   // feature: from one ingredient, calculate others
   const [knownIngredientName, setKnownIngredientName] = useState("")
-  const [knownIngredientQuantity, setKnownIngredientQuantity] = useState(1)
+  const [knownIngredientQuantity, setKnownIngredientQuantity] = useState("")
   const [ingredientsCalculationsFromIngredient, setIngredientsCalculationsFromIngredient] = useState(null)
   // feature: from recipe total quantity, calculate ingredients
-  const [knownRecipeQuantity, setKnownRecipeQuantity] = useState(1)
+  const [knownRecipeQuantity, setKnownRecipeQuantity] = useState("")
   const [ingredientsCalculationsFromRecipeQuantity, setIngredientsCalculationsFromRecipeQuantity] = useState(null)
 
   return (
