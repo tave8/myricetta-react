@@ -116,6 +116,7 @@ const RecipeComponent = (props) => {
                               setIngredientsCalculationsFromIngredient,
                               knownRecipeQuantity,
                               setIngredientsCalculationsFromRecipeQuantity,
+                              setKnownRecipeQuantity,
                             }
                             addIngredientHelper(context)()
                           }
@@ -149,6 +150,7 @@ const RecipeComponent = (props) => {
                               setIngredientsCalculationsFromIngredient,
                               knownRecipeQuantity,
                               setIngredientsCalculationsFromRecipeQuantity,
+                              setKnownRecipeQuantity,
                             }
                             addIngredientHelper(context)()
                           }
@@ -172,6 +174,7 @@ const RecipeComponent = (props) => {
                           setIngredientsCalculationsFromIngredient,
                           knownRecipeQuantity,
                           setIngredientsCalculationsFromRecipeQuantity,
+                          setKnownRecipeQuantity,
                         }
                         addIngredientHelper(context)()
                       }}
@@ -183,67 +186,63 @@ const RecipeComponent = (props) => {
               </Col>
               {/* ingredients list */}
               <Col>
-                <Table striped bordered hover>
-                  <thead>
-                    <tr>
-                      <th>Ingr.</th>
-                      <th className="text-end">Q.tà</th>
-                      <th className="text-end">%</th>
-                      <th className="text-end">Azioni</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {/* exist ingredients */}
-                    {ingredientsCalculations?.ingredients.map((ingredient) => {
-                      return (
-                        <tr key={ingredient.id}>
-                          <td>{ingredient.name}</td>
-                          <td className="text-end">{ingredient.quantityRounded} g</td>
-                          <td className="text-end">{ingredient.percentageRounded} %</td>
-                          <td className="text-end">
-                            <Button
-                              variant="danger"
-                              onClick={() => {
-                                const context = {
-                                  _recipeInstance,
-                                  newIngredientName,
-                                  newIngredientQuantity,
-                                  setIngredientsCalculations,
-                                  knownIngredientName,
-                                  knownIngredientQuantity,
-                                  setIngredientsCalculationsFromIngredient,
-                                  knownRecipeQuantity,
-                                  setIngredientsCalculationsFromRecipeQuantity,
-                                  setKnownIngredientName,
-                                  setKnownIngredientQuantity,
-                                }
-                                const ingredientNameToRemove = ingredient.name
-                                removeIngredientHelper(context)(ingredientNameToRemove)
-                              }}
-                            >
-                              -
-                            </Button>
-                          </td>
-                        </tr>
-                      )
-                    })}
-
-                    {/* no ingredients */}
-                    {(!ingredientsCalculations || ingredientsCalculations.ingredients.length == 0) && (
+                {ingredientsCalculations?.ingredients.length > 0 && (
+                  <Table striped bordered hover>
+                    <thead>
                       <tr>
-                        <td colSpan="4">Aggiungi il primo ingrediente</td>
+                        <th>Ingr.</th>
+                        <th className="text-end">Q.tà</th>
+                        <th className="text-end">%</th>
+                        <th className="text-end">Azioni</th>
                       </tr>
-                    )}
-                  </tbody>
-                  <tfoot>
-                    {ingredientsCalculations?.ingredients.length > 0 && (
-                      <tr className="fw-bold">
-                        <td className="text-end">TOTALE:</td>
-                        <td className="text-end">{ingredientsCalculations.totIngredientsRounded} g</td>
-                      </tr>
-                    )}
-                  </tfoot>
-                </Table>
+                    </thead>
+                    <tbody>
+                      {/* exist ingredients */}
+                      {ingredientsCalculations?.ingredients.map((ingredient) => {
+                        return (
+                          <tr key={ingredient.id}>
+                            <td>{ingredient.name}</td>
+                            <td className="text-end">{ingredient.quantityRounded} g</td>
+                            <td className="text-end">{ingredient.percentageRounded} %</td>
+                            <td className="text-end">
+                              <Button
+                                variant="danger"
+                                onClick={() => {
+                                  const context = {
+                                    _recipeInstance,
+                                    newIngredientName,
+                                    newIngredientQuantity,
+                                    setIngredientsCalculations,
+                                    knownIngredientName,
+                                    knownIngredientQuantity,
+                                    setIngredientsCalculationsFromIngredient,
+                                    knownRecipeQuantity,
+                                    setIngredientsCalculationsFromRecipeQuantity,
+                                    setKnownIngredientName,
+                                    setKnownIngredientQuantity,
+                                    setKnownRecipeQuantity,
+                                  }
+                                  const ingredientNameToRemove = ingredient.name
+                                  removeIngredientHelper(context)(ingredientNameToRemove)
+                                }}
+                              >
+                                -
+                              </Button>
+                            </td>
+                          </tr>
+                        )
+                      })}
+                    </tbody>
+                    <tfoot>
+                      {ingredientsCalculations?.ingredients.length > 0 && (
+                        <tr className="fw-bold">
+                          <td className="text-end">TOTALE:</td>
+                          <td className="text-end">{ingredientsCalculations.totIngredientsRounded} g</td>
+                        </tr>
+                      )}
+                    </tfoot>
+                  </Table>
+                )}
               </Col>
             </Row>
           </Col>
@@ -345,47 +344,42 @@ const RecipeComponent = (props) => {
                 <Col>
                   <Row className="justify-content-center">
                     <Col xs={12}>
-                      <Table striped bordered hover style={{ tableLayout: "fixed", width: "100%" }}>
-                        <colgroup>
-                          <col style={{ width: "70%" }} />
-                          <col style={{ width: "30%" }} />
-                        </colgroup>
+                      {ingredientsCalculationsFromIngredient?.ingredients.length > 0 && (
+                        <Table striped bordered hover style={{ tableLayout: "fixed", width: "100%" }}>
+                          <colgroup>
+                            <col style={{ width: "70%" }} />
+                            <col style={{ width: "30%" }} />
+                          </colgroup>
 
-                        <thead>
-                          <tr>
-                            <th>Ingr.</th>
-                            <th className="text-end">Q.tà</th>
-                          </tr>
-                        </thead>
-
-                        <tbody>
-                          {/* exist ingredients */}
-                          {ingredientsCalculationsFromIngredient?.ingredients.map((ingredient) => {
-                            const isIngredientInListSameAsKnownIngredient = ingredient.name == knownIngredientName
-                            return (
-                              <tr key={ingredient.id} className={isIngredientInListSameAsKnownIngredient ? "table-primary" : ""}>
-                                <td>{ingredient.name}</td>
-                                <td className="text-end">{ingredient.quantityRounded} g</td>
-                              </tr>
-                            )
-                          })}
-
-                          {/* no ingredients */}
-                          {(!ingredientsCalculationsFromIngredient || ingredientsCalculationsFromIngredient.ingredients.length == 0) && (
+                          <thead>
                             <tr>
-                              <td colSpan="3">Aggiungi il primo ingrediente</td>
+                              <th>Ingr.</th>
+                              <th className="text-end">Q.tà</th>
                             </tr>
-                          )}
-                        </tbody>
-                        <tfoot>
-                          {ingredientsCalculationsFromIngredient?.ingredients.length > 0 && (
-                            <tr className="text-end fw-bold">
-                              <td>TOTALE:</td>
-                              <td>{ingredientsCalculationsFromIngredient.totIngredientsRounded} g</td>
-                            </tr>
-                          )}
-                        </tfoot>
-                      </Table>
+                          </thead>
+
+                          <tbody>
+                            {/* exist ingredients */}
+                            {ingredientsCalculationsFromIngredient?.ingredients.map((ingredient) => {
+                              const isIngredientInListSameAsKnownIngredient = ingredient.name == knownIngredientName
+                              return (
+                                <tr key={ingredient.id} className={isIngredientInListSameAsKnownIngredient ? "table-primary" : ""}>
+                                  <td>{ingredient.name}</td>
+                                  <td className="text-end">{ingredient.quantityRounded} g</td>
+                                </tr>
+                              )
+                            })}
+                          </tbody>
+                          <tfoot>
+                            {ingredientsCalculationsFromIngredient?.ingredients.length > 0 && (
+                              <tr className="text-end fw-bold">
+                                <td>TOTALE:</td>
+                                <td>{ingredientsCalculationsFromIngredient.totIngredientsRounded} g</td>
+                              </tr>
+                            )}
+                          </tfoot>
+                        </Table>
+                      )}
                     </Col>
                   </Row>
                 </Col>
@@ -412,7 +406,7 @@ const RecipeComponent = (props) => {
                         onChange={(event) => {
                           const val = event.target.value
                           setKnownRecipeQuantity(val)
-                          const context = { _recipeInstance, knownRecipeQuantity: val, setIngredientsCalculationsFromRecipeQuantity }
+                          const context = { _recipeInstance, knownRecipeQuantity: val, setKnownRecipeQuantity, setIngredientsCalculationsFromRecipeQuantity }
                           calcIngredientsFromRecipeQuantityHelper(context)()
                         }}
                       />
@@ -426,47 +420,42 @@ const RecipeComponent = (props) => {
               <Col>
                 <Row className="justify-content-center">
                   <Col xs={12}>
-                    <Table striped bordered hover style={{ tableLayout: "fixed", width: "100%" }}>
-                      <colgroup>
-                        <col style={{ width: "70%" }} />
-                        <col style={{ width: "30%" }} />
-                      </colgroup>
+                    {ingredientsCalculationsFromRecipeQuantity?.ingredients.length > 0 && (
+                      <Table striped bordered hover style={{ tableLayout: "fixed", width: "100%" }}>
+                        <colgroup>
+                          <col style={{ width: "70%" }} />
+                          <col style={{ width: "30%" }} />
+                        </colgroup>
 
-                      <thead>
-                        <tr>
-                          <th>Ingr.</th>
-                          <th className="text-end">Q.tà</th>
-                        </tr>
-                      </thead>
-
-                      <tbody>
-                        {/* exist ingredients */}
-                        {ingredientsCalculationsFromRecipeQuantity?.ingredients.map((ingredient) => {
-                          // console.log(ingredient)
-                          return (
-                            <tr key={ingredient.id}>
-                              <td>{ingredient.name}</td>
-                              <td className="text-end">{ingredient.quantityRounded} g</td>
-                            </tr>
-                          )
-                        })}
-
-                        {/* no ingredients */}
-                        {(!ingredientsCalculationsFromRecipeQuantity || ingredientsCalculationsFromRecipeQuantity.ingredients.length == 0) && (
+                        <thead>
                           <tr>
-                            <td colSpan="3">Aggiungi il primo ingrediente</td>
+                            <th>Ingr.</th>
+                            <th className="text-end">Q.tà</th>
                           </tr>
-                        )}
-                      </tbody>
-                      <tfoot>
-                        {ingredientsCalculationsFromRecipeQuantity?.ingredients.length > 0 && (
-                          <tr className="table-primary fw-bold">
-                            <td className="text-end">TOTALE:</td>
-                            <td className="text-end">{ingredientsCalculationsFromRecipeQuantity.totIngredientsRounded} g</td>
-                          </tr>
-                        )}
-                      </tfoot>
-                    </Table>
+                        </thead>
+
+                        <tbody>
+                          {/* exist ingredients */}
+                          {ingredientsCalculationsFromRecipeQuantity?.ingredients.map((ingredient) => {
+                            // console.log(ingredient)
+                            return (
+                              <tr key={ingredient.id}>
+                                <td>{ingredient.name}</td>
+                                <td className="text-end">{ingredient.quantityRounded} g</td>
+                              </tr>
+                            )
+                          })}
+                        </tbody>
+                        <tfoot>
+                          {ingredientsCalculationsFromRecipeQuantity?.ingredients.length > 0 && (
+                            <tr className="table-primary fw-bold">
+                              <td className="text-end">TOTALE:</td>
+                              <td className="text-end">{ingredientsCalculationsFromRecipeQuantity.totIngredientsRounded} g</td>
+                            </tr>
+                          )}
+                        </tfoot>
+                      </Table>
+                    )}
                   </Col>
                 </Row>
               </Col>
@@ -520,6 +509,7 @@ const addIngredientHelper = ({
   setIngredientsCalculationsFromIngredient,
   knownRecipeQuantity,
   setIngredientsCalculationsFromRecipeQuantity,
+  setKnownRecipeQuantity,
 }) => {
   return () => {
     try {
@@ -551,7 +541,7 @@ const addIngredientHelper = ({
     // update "from one ingredient"
     calcIngredientsFromOneIngredientHelper({ _recipeInstance, knownIngredientName, knownIngredientQuantity, setIngredientsCalculationsFromIngredient })()
     // update "from recipe quantity"
-    calcIngredientsFromRecipeQuantityHelper({ _recipeInstance, knownRecipeQuantity, setIngredientsCalculationsFromRecipeQuantity })()
+    calcIngredientsFromRecipeQuantityHelper({ _recipeInstance, knownRecipeQuantity, setKnownRecipeQuantity, setIngredientsCalculationsFromRecipeQuantity })()
   }
 }
 
@@ -565,6 +555,7 @@ const removeIngredientHelper = ({
   knownRecipeQuantity,
   setKnownIngredientQuantity,
   setIngredientsCalculationsFromRecipeQuantity,
+  setKnownRecipeQuantity,
 }) => {
   return (ingredientNameToRemove) => {
     const isIngredientSelected = isIngredientSelectedKnownIngredientName({ knownIngredientName })(ingredientNameToRemove)
@@ -585,6 +576,7 @@ const removeIngredientHelper = ({
         setIngredientsCalculationsFromIngredient,
         knownRecipeQuantity,
         setIngredientsCalculationsFromRecipeQuantity,
+        setKnownRecipeQuantity,
       })(ingredientNameToRemove)
       return
     }
@@ -598,6 +590,7 @@ const removeIngredientHelper = ({
       setIngredientsCalculationsFromIngredient,
       knownRecipeQuantity,
       setIngredientsCalculationsFromRecipeQuantity,
+      setKnownRecipeQuantity,
     })(ingredientNameToRemove)
   }
 }
@@ -610,6 +603,7 @@ const removeIngredientAction = ({
   setIngredientsCalculationsFromIngredient,
   knownRecipeQuantity,
   setIngredientsCalculationsFromRecipeQuantity,
+  setKnownRecipeQuantity,
 }) => {
   return (ingredientNameToRemove) => {
     // console.log(ingredientNameToRemove, _recipeInstance.ingredients)
@@ -620,7 +614,7 @@ const removeIngredientAction = ({
     // update "from one ingredient"
     calcIngredientsFromOneIngredientHelper({ _recipeInstance, knownIngredientName, knownIngredientQuantity, setIngredientsCalculationsFromIngredient })()
     // update "from recipe quantity"
-    calcIngredientsFromRecipeQuantityHelper({ _recipeInstance, knownRecipeQuantity, setIngredientsCalculationsFromRecipeQuantity })()
+    calcIngredientsFromRecipeQuantityHelper({ _recipeInstance, knownRecipeQuantity, setKnownRecipeQuantity, setIngredientsCalculationsFromRecipeQuantity })()
   }
 }
 
@@ -647,13 +641,22 @@ const calcIngredientsFromOneIngredientHelper = ({
       // is requested, so we don't have enough information
       // to lock ourselves onto a decision, so for now ignore the error
       if (err instanceof QuantityIsNotValidError) {
+        setIngredientsCalculationsFromIngredient({
+          ingredients: [],
+          totIngredientsRounded: 0,
+        })
         console.info(`ignored invalid quantity in "calcIngredientsFromOneIngredientHelper"`)
       }
     }
   }
 }
 
-const calcIngredientsFromRecipeQuantityHelper = ({ _recipeInstance, knownRecipeQuantity, setIngredientsCalculationsFromRecipeQuantity }) => {
+const calcIngredientsFromRecipeQuantityHelper = ({
+  _recipeInstance,
+  knownRecipeQuantity,
+  setKnownRecipeQuantity,
+  setIngredientsCalculationsFromRecipeQuantity,
+}) => {
   return () => {
     try {
       const ingredientsData = _recipeInstance.calcFromTot(knownRecipeQuantity)
@@ -664,6 +667,10 @@ const calcIngredientsFromRecipeQuantityHelper = ({ _recipeInstance, knownRecipeQ
       // is requested, so we don't have enough information
       // to lock ourselves onto a decision, so for now ignore the error
       if (err instanceof QuantityIsNotValidError) {
+        setIngredientsCalculationsFromRecipeQuantity({
+          ingredients: [],
+          totIngredientsRounded: 0,
+        })
         console.info(`ignored invalid quantity in "calcIngredientsFromRecipeQuantityHelper"`)
       }
     }
