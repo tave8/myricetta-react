@@ -9,6 +9,8 @@ import Recipe from "./Recipe"
  *  })
  */
 export default class RecipeRemote extends Recipe {
+  static API_URL = "..."
+
   constructor(args = {}) {
     super(args)
     if (!args.apiUrl) {
@@ -20,5 +22,14 @@ export default class RecipeRemote extends Recipe {
   async addRemote() {
     const recipeToSave = this.getRecipeToSave()
     console.log(recipeToSave)
+  }
+
+  async getByIdRemote(recipeId) {
+    if (!recipeId) {
+      throw new Error("must provide recipeId param")
+    }
+    return {
+      recipeId,
+    }
   }
 }

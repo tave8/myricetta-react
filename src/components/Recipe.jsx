@@ -12,6 +12,7 @@ import {
   RecipeHasNoIngredientsError,
   RecipeNameIsNotValidError,
 } from "../assets/js/Recipe/errors"
+import { useParams } from "react-router-dom"
 
 const RecipeComponent = (props) => {
   // the Recipe instance. must not me touched.
@@ -32,8 +33,22 @@ const RecipeComponent = (props) => {
   const [knownRecipeQuantity, setKnownRecipeQuantity] = useState("")
   const [ingredientsCalculationsFromRecipeQuantity, setIngredientsCalculationsFromRecipeQuantity] = useState(null)
 
+  const urlParams = useParams()
+
   useEffect(() => {
     focusNewIngredientName()
+    // if this component is edit mode
+    if (props.isEditMode) {
+      const recipeId = urlParams.recipeId
+      _recipeInstance
+        .getByIdRemote(recipeId)
+        .then((remoteRecipe) => {
+          console.log(remoteRecipe)
+        })
+        .catch((err) => {
+          console.error(err)
+        })
+    }
   }, [])
 
   return (
@@ -485,14 +500,7 @@ const RecipeComponent = (props) => {
   )
 }
 
-const addRecipeHelper = ({
-  _recipeInstance,
-  recipeName,
-  ingredientsCalculations,
-  knownIngredientName,
-  knownIngredientQuantity,
-  setIngredientsCalculationsFromIngredient,
-}) => {
+const addRecipeHelper = ({ _recipeInstance, recipeName }) => {
   return async () => {
     try {
       _recipeInstance.setName(recipeName)
@@ -669,12 +677,7 @@ const calcIngredientsFromOneIngredientHelper = ({
   }
 }
 
-const calcIngredientsFromRecipeQuantityHelper = ({
-  _recipeInstance,
-  knownRecipeQuantity,
-  setKnownRecipeQuantity,
-  setIngredientsCalculationsFromRecipeQuantity,
-}) => {
+const calcIngredientsFromRecipeQuantityHelper = ({ _recipeInstance, knownRecipeQuantity, setIngredientsCalculationsFromRecipeQuantity }) => {
   return () => {
     try {
       const ingredientsData = _recipeInstance.calcFromTot(knownRecipeQuantity)
@@ -720,11 +723,6 @@ const handleRecipePhotoChange = ({ setRecipePhotoUrl }) => {
 
 const focusNewIngredientName = () => {
   const element = document.getElementById("new-ingredient-name")
-  element.focus()
-}
-
-const focusKnownIngredientQuantity = () => {
-  const element = document.getElementById("known-ingredient-quantity")
   element.focus()
 }
 
