@@ -2,7 +2,9 @@ import { useState } from "react"
 import { Container, Row, Col, CardGroup, Card, Spinner, Alert, Button, Image, Form, ListGroup, Navbar, NavDropdown, Nav, Table } from "react-bootstrap"
 import { Helmet } from "react-helmet"
 
-import Recipe from "../assets/js/Recipe/Recipe"
+import RecipeRemote from "../assets/js/Recipe/RecipeRemote"
+const RECIPE_API_URL = "https://"
+
 import {
   IngredientNameAlreadyExistsError,
   IngredientNameIsNotValidError,
@@ -13,7 +15,7 @@ import {
 
 const RecipeComponent = (props) => {
   // the Recipe instance. must not me touched.
-  const [_recipeInstance, _setRecipeInstance] = useState(new Recipe())
+  const [_recipeInstance, _setRecipeInstance] = useState(new RecipeRemote({ apiUrl: RECIPE_API_URL }))
   // recipe info
   const [recipeName, setRecipeName] = useState("")
   const [recipePhotoUrl, setRecipePhotoUrl] = useState("")
@@ -47,6 +49,7 @@ const RecipeComponent = (props) => {
                 <Form.Group>
                   <Form.Control
                     type="text"
+                    id="recipe-name"
                     placeholder="Nome ricetta"
                     value={recipeName}
                     onChange={(event) => {
@@ -483,20 +486,24 @@ const addRecipeHelper = ({
   knownIngredientQuantity,
   setIngredientsCalculationsFromIngredient,
 }) => {
-  return () => {
+  return async () => {
     try {
       _recipeInstance.setName(recipeName)
-      const recipeToSave = _recipeInstance.getRecipeToSave()
+      // const recipeToSave = _recipeInstance.getRecipeToSave()
 
-      console.log(recipeToSave)
-      console.log(_recipeInstance.getIngredients())
+      // await _recipeInstance.addRemote()
+      console.log(_recipeInstance)
+
+      // console.log(recipeToSave)
+      // console.log(_recipeInstance.getIngredients())
     } catch (err) {
       if (err instanceof RecipeNameIsNotValidError) {
+        focusRecipeName()
         alert("Inserisci il nome della ricetta")
       } else if (err instanceof RecipeHasNoIngredientsError) {
+        focusNewIngredientName()
         alert("Inserisci almeno un ingrediente.")
       }
-      return
     }
   }
 }
@@ -655,6 +662,11 @@ const isIngredientSelectedKnownIngredientName = ({ knownIngredientName }) => {
 
 const focusNewIngredientName = () => {
   const element = document.getElementById("new-ingredient-name")
+  element.focus()
+}
+
+const focusRecipeName = () => {
+  const element = document.getElementById("recipe-name")
   element.focus()
 }
 

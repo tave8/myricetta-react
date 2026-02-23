@@ -17,15 +17,23 @@ const defaultConfig = {
   normalizeNumbers: true,
 }
 
+const defaultParams = {
+  config: defaultConfig,
+}
+
 /**
  * ### Recipe
+ *
+ * USAGE
+ *  new Recipe()
  */
 export default class Recipe extends Helper {
-  constructor(config = defaultConfig) {
+  constructor(params = defaultParams) {
     super()
+    const finalParams = { ...structuredClone(defaultParams), ...structuredClone(params) }
     this.id = this.constructor.generateId()
     this.ingredients = []
-    this.config = { ...defaultConfig, ...config }
+    this.config = finalParams.config
     // this.overridden = false
   }
 
@@ -453,10 +461,20 @@ export default class Recipe extends Helper {
   }
 
   /**
-   * Get the data you need to save the recipe wherever you want.
-   * Checks will be done that the recipe is ready to be saved.
+   * Get the data you need to save
+   *  the recipe wherever you want (remote, local storage, etc.).
+   * Checks will be done to make sure the recipe is ready to be saved.
+   *
+   * Throws:
+   *    RecipeNameIsNotValidError
+   *    RecipeHasNoIngredientsError
    */
   getRecipeToSave() {
+    // recipe has invalid name
+    if (!this.constructor.isValidRecipeName(this.getName())) {
+      throw new RecipeNameIsNotValidError(this.getName())
+    }
+
     // recipe has no ingredients
     if (!this.recipeHasIngredients()) {
       throw new RecipeHasNoIngredientsError()

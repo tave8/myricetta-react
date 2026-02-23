@@ -100,7 +100,7 @@ export class RecipeHasNoIngredientsError extends Error {
     if (userMessage == null || userMessage == undefined) {
       newUserMessage = "<user message was nully>"
     }
-    const initialMessage = "Recipe cannot be saved. "
+    const initialMessage = "Recipe must have at least 1 ingredient. "
     const finalMessage = (newUserMessage.toString() + initialMessage).trim()
     super(finalMessage)
   }
