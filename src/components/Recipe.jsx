@@ -631,24 +631,42 @@ const calcIngredientsFromOneIngredientHelper = ({
   setIngredientsCalculationsFromIngredient,
 }) => {
   return () => {
-    // if there's no ingredient selected
-    if (knownIngredientName == "") {
-      return
+    try {
+      // if there's no ingredient selected
+      if (knownIngredientName == "") {
+        return
+      }
+      const ingredientsData = _recipeInstance.calcFromIngredient({
+        name: knownIngredientName,
+        quantity: knownIngredientQuantity,
+      })
+      setIngredientsCalculationsFromIngredient(ingredientsData)
+    } catch (err) {
+      // why ignore this error? because the user might
+      // me in the process of typing, or a new refresh of the calculations
+      // is requested, so we don't have enough information
+      // to lock ourselves onto a decision, so for now ignore the error
+      if (err instanceof QuantityIsNotValidError) {
+        console.info(`ignored invalid quantity in "calcIngredientsFromOneIngredientHelper"`)
+      }
     }
-
-    // console.log(knownIngredientName, knownIngredientQuantity)
-    const ingredientsData = _recipeInstance.calcFromIngredient({
-      name: knownIngredientName,
-      quantity: knownIngredientQuantity,
-    })
-    setIngredientsCalculationsFromIngredient(ingredientsData)
   }
 }
 
 const calcIngredientsFromRecipeQuantityHelper = ({ _recipeInstance, knownRecipeQuantity, setIngredientsCalculationsFromRecipeQuantity }) => {
   return () => {
-    const ingredientsData = _recipeInstance.calcFromTot(knownRecipeQuantity)
-    setIngredientsCalculationsFromRecipeQuantity(ingredientsData)
+    try {
+      const ingredientsData = _recipeInstance.calcFromTot(knownRecipeQuantity)
+      setIngredientsCalculationsFromRecipeQuantity(ingredientsData)
+    } catch (err) {
+      // why ignore this error? because the user might
+      // me in the process of typing, or a new refresh of the calculations
+      // is requested, so we don't have enough information
+      // to lock ourselves onto a decision, so for now ignore the error
+      if (err instanceof QuantityIsNotValidError) {
+        console.info(`ignored invalid quantity in "calcIngredientsFromRecipeQuantityHelper"`)
+      }
+    }
   }
 }
 
