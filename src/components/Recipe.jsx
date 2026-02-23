@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Container, Row, Col, CardGroup, Card, Spinner, Alert, Button, Image, Form, ListGroup, Navbar, NavDropdown, Nav, Table } from "react-bootstrap"
 import { Helmet } from "react-helmet"
 
@@ -23,7 +23,7 @@ const RecipeComponent = (props) => {
   const [ingredientsCalculations, setIngredientsCalculations] = useState(null)
   // the new ingredient that is being added
   const [newIngredientName, setNewIngredientName] = useState("")
-  const [newIngredientQuantity, setNewIngredientQuantity] = useState(1)
+  const [newIngredientQuantity, setNewIngredientQuantity] = useState("")
   // feature: from one ingredient, calculate others
   const [knownIngredientName, setKnownIngredientName] = useState("")
   const [knownIngredientQuantity, setKnownIngredientQuantity] = useState("")
@@ -32,6 +32,10 @@ const RecipeComponent = (props) => {
   const [knownRecipeQuantity, setKnownRecipeQuantity] = useState("")
   const [ingredientsCalculationsFromRecipeQuantity, setIngredientsCalculationsFromRecipeQuantity] = useState(null)
 
+  useEffect(() => {
+    focusNewIngredientName()
+  }, [])
+
   return (
     // centers content in the page
     <Row className="justify-content-center">
@@ -39,7 +43,7 @@ const RecipeComponent = (props) => {
         <Row className="flex-column gap-5">
           {/* PAGE TITLE */}
           <Col>
-            <h2 className="text-center">Aggiungi ricetta</h2>
+            <h2 className="text-center">{recipeName.trim() == "" ? "Aggiungi ricetta" : "Ricetta per " + recipeName}</h2>
           </Col>
           {/* RECIPE INFO (name, photo etc.) */}
           <Col>
@@ -275,11 +279,47 @@ const RecipeComponent = (props) => {
               {/* known ingredient (name, quantity) */}
               <Col>
                 <Row className="g-3">
+                  {/* known ingredient name */}
+                  <Col xs={8}>
+                    <Form.Group>
+                      <Form.Select
+                        value={knownIngredientName}
+                        id="known-ingredient-name-input"
+                        onChange={(event) => {
+                          const val = event.target.value
+                          const isOptionEmpty = val.trim() == ""
+                          setKnownIngredientName(val)
+                          if (isOptionEmpty) {
+                            setKnownIngredientQuantity("")
+                          }
+                          const context = {
+                            _recipeInstance,
+                            knownIngredientName: val,
+                            knownIngredientQuantity,
+                            setIngredientsCalculationsFromIngredient,
+                          }
+                          calcIngredientsFromOneIngredientHelper(context)()
+                          // focusKnownIngredientQuantity()
+                          setTimeout(() => {
+                            scrollIntoViewOfKnownIngredientNameInput()
+                          }, 100)
+                        }}
+                      >
+                        <option value="">Seleziona ingrediente...</option>
+                        {ingredientsCalculations?.ingredients.map((ingredient) => (
+                          <option key={ingredient.id} value={ingredient.name}>
+                            {ingredient.name}
+                          </option>
+                        ))}
+                      </Form.Select>
+                    </Form.Group>
+                  </Col>
                   {/* known ingredient quantity */}
                   <Col xs={4}>
                     <Form.Group>
                       <Form.Control
                         type="number"
+                        id="known-ingredient-quantity"
                         placeholder="Quantità (g)"
                         value={knownIngredientQuantity}
                         onChange={(event) => {
@@ -299,54 +339,18 @@ const RecipeComponent = (props) => {
                       />
                     </Form.Group>
                   </Col>
-
-                  {/* known ingredient name */}
-                  <Col xs={8}>
-                    <Form.Group>
-                      <Form.Select
-                        value={knownIngredientName}
-                        id="known-ingredient-name-input"
-                        onChange={(event) => {
-                          const val = event.target.value
-                          const isOptionEmpty = val.trim() == ""
-                          setKnownIngredientName(val)
-                          if (isOptionEmpty) {
-                            setKnownIngredientQuantity(1)
-                          }
-                          const context = {
-                            _recipeInstance,
-                            knownIngredientName: val,
-                            knownIngredientQuantity,
-                            setIngredientsCalculationsFromIngredient,
-                          }
-                          calcIngredientsFromOneIngredientHelper(context)()
-                          setTimeout(() => {
-                            scrollIntoViewOfKnownIngredientNameInput()
-                          }, 100)
-                        }}
-                      >
-                        <option value="">Seleziona ingrediente...</option>
-                        {ingredientsCalculations?.ingredients.map((ingredient) => (
-                          <option key={ingredient.id} value={ingredient.name}>
-                            {ingredient.name}
-                          </option>
-                        ))}
-                      </Form.Select>
-                    </Form.Group>
-                  </Col>
-
                   {/* Frase */}
-                  <Col xs={12}>
-                    {knownIngredientQuantity && knownIngredientName && (
+                  {knownIngredientQuantity && knownIngredientName && (
+                    <Col xs={12}>
                       <div className="fw-bold">
-                        Per {knownIngredientQuantity} g di {knownIngredientName} mi servono:
+                        Per <span className="">{knownIngredientQuantity}</span> g di <span className="">{knownIngredientName}</span> mi servono:
                       </div>
-                    )}
-                  </Col>
+                    </Col>
+                  )}
                 </Row>
               </Col>
               {/* ingredients list */}
-              {knownIngredientName != "" && (
+              {knownIngredientQuantity && knownIngredientName && (
                 <Col>
                   <Row className="justify-content-center">
                     <Col xs={12}>
@@ -423,7 +427,11 @@ const RecipeComponent = (props) => {
                     </Form.Group>
                   </Col>
                   {/* frase */}
-                  <Col xs={12}>{knownRecipeQuantity && <div className="fw-bold">Per {knownRecipeQuantity} g di impasto mi servono:</div>}</Col>
+                  <Col xs={12}>
+                    {knownRecipeQuantity && ingredientsCalculationsFromRecipeQuantity?.ingredients.length > 0 && (
+                      <div className="fw-bold">Per {knownRecipeQuantity} g di impasto mi servono:</div>
+                    )}
+                  </Col>
                 </Row>
               </Col>
               {/* ingredients list */}
@@ -529,7 +537,7 @@ const addIngredientHelper = ({
       })
       // empty the new ingredient inputs
       setNewIngredientName("")
-      setNewIngredientQuantity(1)
+      setNewIngredientQuantity("")
       // input focus on ingredient name
       focusNewIngredientName()
     } catch (err) {
@@ -576,7 +584,7 @@ const removeIngredientHelper = ({
     if (isIngredientSelected) {
       // if the ingredient is selected elsewhere, deselect it
       setKnownIngredientName("")
-      setKnownIngredientQuantity(1)
+      setKnownIngredientQuantity("")
       removeIngredientAction({
         _recipeInstance,
         setIngredientsCalculations,
@@ -715,17 +723,22 @@ const focusNewIngredientName = () => {
   element.focus()
 }
 
+const focusKnownIngredientQuantity = () => {
+  const element = document.getElementById("known-ingredient-quantity")
+  element.focus()
+}
+
 const focusRecipeName = () => {
   const element = document.getElementById("recipe-name")
   element.focus()
 }
 
 const scrollIntoViewOfKnownRecipeQuantityInput = () => {
-  document.getElementById("known-recipe-quantity-input").scrollIntoView()
+  // document.getElementById("known-recipe-quantity-input").scrollIntoView()
 }
 
 const scrollIntoViewOfKnownIngredientNameInput = () => {
-  document.getElementById("known-ingredient-name-input").scrollIntoView()
+  // document.getElementById("known-ingredient-name-input").scrollIntoView()
 }
 
 export default RecipeComponent
