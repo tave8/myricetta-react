@@ -292,6 +292,9 @@ const RecipeComponent = (props) => {
                             setIngredientsCalculationsFromIngredient,
                           }
                           calcIngredientsFromOneIngredientHelper(context)()
+                          setTimeout(() => {
+                            scrollIntoViewOfKnownIngredientNameInput()
+                          }, 100)
                         }}
                       />
                     </Form.Group>
@@ -302,6 +305,7 @@ const RecipeComponent = (props) => {
                     <Form.Group>
                       <Form.Select
                         value={knownIngredientName}
+                        id="known-ingredient-name-input"
                         onChange={(event) => {
                           const val = event.target.value
                           const isOptionEmpty = val.trim() == ""
@@ -309,7 +313,6 @@ const RecipeComponent = (props) => {
                           if (isOptionEmpty) {
                             setKnownIngredientQuantity(1)
                           }
-
                           const context = {
                             _recipeInstance,
                             knownIngredientName: val,
@@ -317,6 +320,9 @@ const RecipeComponent = (props) => {
                             setIngredientsCalculationsFromIngredient,
                           }
                           calcIngredientsFromOneIngredientHelper(context)()
+                          setTimeout(() => {
+                            scrollIntoViewOfKnownIngredientNameInput()
+                          }, 100)
                         }}
                       >
                         <option value="">Seleziona ingrediente...</option>
@@ -401,6 +407,7 @@ const RecipeComponent = (props) => {
                     <Form.Group>
                       <Form.Control
                         type="number"
+                        id="known-recipe-quantity-input"
                         placeholder="Quantità (g)"
                         value={knownRecipeQuantity}
                         onChange={(event) => {
@@ -408,6 +415,9 @@ const RecipeComponent = (props) => {
                           setKnownRecipeQuantity(val)
                           const context = { _recipeInstance, knownRecipeQuantity: val, setKnownRecipeQuantity, setIngredientsCalculationsFromRecipeQuantity }
                           calcIngredientsFromRecipeQuantityHelper(context)()
+                          setTimeout(() => {
+                            scrollIntoViewOfKnownRecipeQuantityInput()
+                          }, 100)
                         }}
                       />
                     </Form.Group>
@@ -683,18 +693,6 @@ const isIngredientSelectedKnownIngredientName = ({ knownIngredientName }) => {
   }
 }
 
-// MORE HELPERS
-
-const focusNewIngredientName = () => {
-  const element = document.getElementById("new-ingredient-name")
-  element.focus()
-}
-
-const focusRecipeName = () => {
-  const element = document.getElementById("recipe-name")
-  element.focus()
-}
-
 const handleRecipePhotoChange = ({ setRecipePhotoUrl }) => {
   return (e) => {
     const file = e.target.files[0]
@@ -708,6 +706,26 @@ const handleRecipePhotoChange = ({ setRecipePhotoUrl }) => {
     }
     reader.readAsDataURL(file)
   }
+}
+
+// MORE HELPERS
+
+const focusNewIngredientName = () => {
+  const element = document.getElementById("new-ingredient-name")
+  element.focus()
+}
+
+const focusRecipeName = () => {
+  const element = document.getElementById("recipe-name")
+  element.focus()
+}
+
+const scrollIntoViewOfKnownRecipeQuantityInput = () => {
+  document.getElementById("known-recipe-quantity-input").scrollIntoView()
+}
+
+const scrollIntoViewOfKnownIngredientNameInput = () => {
+  document.getElementById("known-ingredient-name-input").scrollIntoView()
 }
 
 export default RecipeComponent
