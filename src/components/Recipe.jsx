@@ -485,8 +485,7 @@ const addRecipeHelper = ({
 }) => {
   return () => {
     try {
-      const sanitizedRecipeName = sanitizeRecipeName(recipeName)
-      _recipeInstance.setName(sanitizedRecipeName)
+      _recipeInstance.setName(recipeName)
       const recipeToSave = _recipeInstance.getRecipeToSave()
 
       console.log(recipeToSave)
@@ -646,6 +645,19 @@ const calcIngredientsFromRecipeQuantityHelper = ({ _recipeInstance, knownRecipeQ
   }
 }
 
+const isIngredientSelectedKnownIngredientName = ({ knownIngredientName }) => {
+  return (ingredientNameToRemove) => {
+    return ingredientNameToRemove == knownIngredientName
+  }
+}
+
+// MORE HELPERS
+
+const focusNewIngredientName = () => {
+  const element = document.getElementById("new-ingredient-name")
+  element.focus()
+}
+
 const handleRecipePhotoChange = ({ setRecipePhotoUrl }) => {
   return (e) => {
     const file = e.target.files[0]
@@ -659,27 +671,6 @@ const handleRecipePhotoChange = ({ setRecipePhotoUrl }) => {
     }
     reader.readAsDataURL(file)
   }
-}
-
-const isIngredientSelectedKnownIngredientName = ({ knownIngredientName }) => {
-  return (ingredientNameToRemove) => {
-    return ingredientNameToRemove == knownIngredientName
-  }
-}
-
-// MORE HELPERS
-
-const sanitizeIngredientName = (val) => {
-  return val.trim().toLowerCase()
-}
-
-const sanitizeRecipeName = (val) => {
-  return val.trim().toLowerCase()
-}
-
-const focusNewIngredientName = () => {
-  const element = document.getElementById("new-ingredient-name")
-  element.focus()
 }
 
 export default RecipeComponent
