@@ -3,7 +3,6 @@ import { Container, Row, Col, CardGroup, Card, Spinner, Alert, Button, Image, Fo
 import { Helmet } from "react-helmet"
 
 import RecipeRemote from "../assets/js/Recipe/RecipeRemote"
-const RECIPE_API_URL = "https://"
 
 import {
   IngredientNameAlreadyExistsError,
@@ -13,11 +12,11 @@ import {
   RecipeNameIsNotValidError,
 } from "../assets/js/Recipe/errors"
 import { useParams } from "react-router-dom"
-import RecipeCalculations from "./RecipeCalculations"
+import RecipeCalculations from "./MyRecipeCalculations"
 
 const RecipeComponent = (props) => {
   // the Recipe instance. must not me touched.
-  const [_recipeInstance, _setRecipeInstance] = useState(new RecipeRemote({ apiUrl: RECIPE_API_URL }))
+  const [_recipeInstance, _setRecipeInstance] = useState(new RecipeRemote())
   // recipe info
   const [recipeName, setRecipeName] = useState("")
   const [recipePhotoUrl, setRecipePhotoUrl] = useState("")
@@ -124,12 +123,6 @@ const RecipeComponent = (props) => {
                               newIngredientQuantity,
                               setIngredientsCalculations,
                               _recipeInstance,
-                              // knownIngredientName,
-                              // knownIngredientQuantity,
-                              // setIngredientsCalculationsFromIngredient,
-                              // knownRecipeQuantity,
-                              // setIngredientsCalculationsFromRecipeQuantity,
-                              // setKnownRecipeQuantity,
                             }
                             addIngredientHelper(context)()
                           }
@@ -158,12 +151,6 @@ const RecipeComponent = (props) => {
                               newIngredientQuantity,
                               setIngredientsCalculations,
                               _recipeInstance,
-                              // knownIngredientName,
-                              // knownIngredientQuantity,
-                              // setIngredientsCalculationsFromIngredient,
-                              // knownRecipeQuantity,
-                              // setIngredientsCalculationsFromRecipeQuantity,
-                              // setKnownRecipeQuantity,
                             }
                             addIngredientHelper(context)()
                           }
@@ -182,12 +169,6 @@ const RecipeComponent = (props) => {
                           newIngredientQuantity,
                           setIngredientsCalculations,
                           _recipeInstance,
-                          // knownIngredientName,
-                          // knownIngredientQuantity,
-                          // setIngredientsCalculationsFromIngredient,
-                          // knownRecipeQuantity,
-                          // setIngredientsCalculationsFromRecipeQuantity,
-                          // setKnownRecipeQuantity,
                         }
                         addIngredientHelper(context)()
                       }}
@@ -226,14 +207,6 @@ const RecipeComponent = (props) => {
                                     newIngredientName,
                                     newIngredientQuantity,
                                     setIngredientsCalculations,
-                                    // knownIngredientName,
-                                    // knownIngredientQuantity,
-                                    // setIngredientsCalculationsFromIngredient,
-                                    // knownRecipeQuantity,
-                                    // setIngredientsCalculationsFromRecipeQuantity,
-                                    // setKnownIngredientName,
-                                    // setKnownIngredientQuantity,
-                                    // setKnownRecipeQuantity,
                                   }
                                   const ingredientNameToRemove = ingredient.name
                                   removeIngredientHelper(context)(ingredientNameToRemove)
@@ -268,9 +241,6 @@ const RecipeComponent = (props) => {
                   _recipeInstance,
                   recipeName,
                   ingredientsCalculations,
-                  // knownIngredientName,
-                  // knownIngredientQuantity,
-                  // setIngredientsCalculationsFromIngredient,
                 }
                 addRecipeHelper(context)()
               }}
@@ -278,7 +248,6 @@ const RecipeComponent = (props) => {
               Aggiungi ricetta
             </Button>
           </Col>
-          {/* <RecipeCalculations /> */}
         </Row>
       </Col>
     </Row>
@@ -289,13 +258,15 @@ const addRecipeHelper = ({ _recipeInstance, recipeName }) => {
   return async () => {
     try {
       _recipeInstance.setName(recipeName)
-      // const recipeToSave = _recipeInstance.getRecipeToSave()
+      const recipeToSave = _recipeInstance.getRecipeToSave()
 
-      // await _recipeInstance.addRemote()
-      console.log(_recipeInstance)
-
-      // console.log(recipeToSave)
-      // console.log(_recipeInstance.getIngredients())
+      try {
+        const result = await _recipeInstance.add()
+        console.log(result)
+      } catch (err) {
+        console.error(err)
+        alert(`Error while adding recipe.`)
+      }
     } catch (err) {
       if (err instanceof RecipeNameIsNotValidError) {
         focusRecipeName()
@@ -303,6 +274,8 @@ const addRecipeHelper = ({ _recipeInstance, recipeName }) => {
       } else if (err instanceof RecipeHasNoIngredientsError) {
         focusNewIngredientName()
         alert("Inserisci almeno un ingrediente.")
+      } else {
+        throw new Error(`Uncaught error.`, err)
       }
     }
   }
@@ -315,12 +288,6 @@ const addIngredientHelper = ({
   newIngredientName,
   newIngredientQuantity,
   setIngredientsCalculations,
-  // knownIngredientName,
-  // knownIngredientQuantity,
-  // setIngredientsCalculationsFromIngredient,
-  // knownRecipeQuantity,
-  // setIngredientsCalculationsFromRecipeQuantity,
-  // setKnownRecipeQuantity,
 }) => {
   return () => {
     try {
@@ -350,11 +317,6 @@ const addIngredientHelper = ({
 
     // set new ingredients in the react component state
     setIngredientsCalculations(_recipeInstance.getIngredients())
-
-    // update "from one ingredient"
-    // calcIngredientsFromOneIngredientHelper({ _recipeInstance, knownIngredientName, knownIngredientQuantity, setIngredientsCalculationsFromIngredient })()
-    // // update "from recipe quantity"
-    // calcIngredientsFromRecipeQuantityHelper({ _recipeInstance, knownRecipeQuantity, setKnownRecipeQuantity, setIngredientsCalculationsFromRecipeQuantity })()
   }
 }
 
@@ -408,26 +370,13 @@ const removeIngredientHelper = ({
   }
 }
 
-const removeIngredientAction = ({
-  _recipeInstance,
-  setIngredientsCalculations,
-  // knownIngredientName,
-  // knownIngredientQuantity,
-  // setIngredientsCalculationsFromIngredient,
-  // knownRecipeQuantity,
-  // setIngredientsCalculationsFromRecipeQuantity,
-  // setKnownRecipeQuantity,
-}) => {
+const removeIngredientAction = ({ _recipeInstance, setIngredientsCalculations }) => {
   return (ingredientNameToRemove) => {
     // console.log(ingredientNameToRemove, _recipeInstance.ingredients)
     // remove ingredient from recipe library instance
     _recipeInstance.removeIngredientByName(ingredientNameToRemove)
     // set new ingredients in the react component state
     setIngredientsCalculations(_recipeInstance.getIngredients())
-    // update "from one ingredient"
-    // calcIngredientsFromOneIngredientHelper({ _recipeInstance, knownIngredientName, knownIngredientQuantity, setIngredientsCalculationsFromIngredient })()
-    // // update "from recipe quantity"
-    // calcIngredientsFromRecipeQuantityHelper({ _recipeInstance, knownRecipeQuantity, setKnownRecipeQuantity, setIngredientsCalculationsFromRecipeQuantity })()
   }
 }
 

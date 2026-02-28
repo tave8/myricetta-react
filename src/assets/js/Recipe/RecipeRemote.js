@@ -13,18 +13,16 @@ export default class RecipeRemote extends Recipe {
 
   constructor(args = {}) {
     super(args)
-    if (!args.apiUrl) {
-      throw new Error("must provide apiUrl param")
-    }
     this.apiUrl = args.apiUrl
   }
 
-  async addRemote() {
+  async add() {
     const recipeToSave = this.getRecipeToSave()
-    console.log(recipeToSave)
+    
+    return recipeToSave
   }
 
-  async getByIdRemote(recipeId) {
+  async getById(recipeId) {
     if (!recipeId) {
       throw new Error("must provide recipeId param")
     }

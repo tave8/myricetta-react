@@ -9,8 +9,9 @@ import { Provider } from "react-redux"
 import { store, persistedStore } from "./redux/store/index"
 import { PersistGate } from "redux-persist/integration/react"
 // pages components
-import RecipeComponent from "./components/Recipe"
-import MyRecipesComponent from "./components/MyRecipes"
+import AddOrEditRecipe from "./components/AddOrEditRecipe"
+import MyRecipes from "./components/MyRecipes"
+import MyRecipeCalculations from "./components/MyRecipeCalculations"
 import NotFoundComponent from "./components/NotFound"
 // layout components
 import NavbarComponent from "./components/Navbar"
@@ -28,9 +29,10 @@ function App() {
             {/* PAGES/ROUTES */}
             <Col xs={12} className="py-3" style={{ flexGrow: 1 }} id="pages-container">
               <Routes>
-                <Route path="/my-recipes" element={<MyRecipesComponent />} />
-                <Route path="/add-recipe" element={<RecipeComponent />} />
-                <Route path="/edit-recipe/:recipeId" element={<RecipeComponent isEditMode={true} />} />
+                <Route path="/my-recipes" element={<MyRecipes />} />
+                <Route path="/my-recipes/:recipeId" element={<MyRecipeCalculations />} />
+                <Route path="/add-recipe" element={<AddOrEditRecipe />} />
+                <Route path="/edit-recipe/:recipeId" element={<AddOrEditRecipe isEditMode={true} />} />
                 <Route path="*" element={<NotFoundComponent />} />
               </Routes>
             </Col>

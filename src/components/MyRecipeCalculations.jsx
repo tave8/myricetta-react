@@ -1,8 +1,15 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
+import { Container, Row, Col, CardGroup, Card, Spinner, Alert, Button, Image, Form, ListGroup, Navbar, NavDropdown, Nav } from "react-bootstrap"
+
 import { QuantityIsNotValidError } from "../assets/js/Recipe/errors"
+import RecipeRemote from "../assets/js/Recipe/RecipeRemote"
+import { useParams } from "react-router-dom"
 
-const RecipeCalculations = ({_recipeInstance}) => {
-
+const RecipeCalculations = () => {
+  // the Recipe instance. must not me touched.
+  const [_recipeInstance, _setRecipeInstance] = useState(new RecipeRemote({ apiUrl: RECIPE_API_URL }))
+  // initial/original ingredients
+  const [ingredientsCalculations, setIngredientsCalculations] = useState(null)
   // feature: from one ingredient, calculate others
   const [knownIngredientName, setKnownIngredientName] = useState("")
   const [knownIngredientQuantity, setKnownIngredientQuantity] = useState("")
@@ -10,6 +17,24 @@ const RecipeCalculations = ({_recipeInstance}) => {
   // feature: from recipe total quantity, calculate ingredients
   const [knownRecipeQuantity, setKnownRecipeQuantity] = useState("")
   const [ingredientsCalculationsFromRecipeQuantity, setIngredientsCalculationsFromRecipeQuantity] = useState(null)
+
+  const urlParams = useParams()
+
+  /**
+   * On component mount, load the recipe with the provided id
+   */
+  useEffect(() => {
+    // if this component is edit mode
+    const recipeId = urlParams.recipeId
+    _recipeInstance
+      .getByIdRemote(recipeId)
+      .then((remoteRecipe) => {
+        console.log(remoteRecipe)
+      })
+      .catch((err) => {
+        console.error(err)
+      })
+  })
 
   return (
     <>
@@ -227,7 +252,6 @@ const RecipeCalculations = ({_recipeInstance}) => {
   )
 }
 
-
 const calcIngredientsFromOneIngredientHelper = ({
   _recipeInstance,
   knownIngredientName,
@@ -282,7 +306,6 @@ const calcIngredientsFromRecipeQuantityHelper = ({ _recipeInstance, knownRecipeQ
   }
 }
 
-
 const scrollIntoViewOfKnownRecipeQuantityInput = () => {
   // document.getElementById("known-recipe-quantity-input").scrollIntoView()
 }
@@ -290,7 +313,5 @@ const scrollIntoViewOfKnownRecipeQuantityInput = () => {
 const scrollIntoViewOfKnownIngredientNameInput = () => {
   // document.getElementById("known-ingredient-name-input").scrollIntoView()
 }
-
-
 
 export default RecipeCalculations
