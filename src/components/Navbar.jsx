@@ -16,6 +16,9 @@ const NavbarComponent = (props) => {
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="me-auto">
+              <Nav.Link as={Link} to="/my-recipes">
+                Le mie ricette
+              </Nav.Link>
               <Nav.Link as={Link} to="/add-recipe">
                 Aggiungi ricetta
               </Nav.Link>
