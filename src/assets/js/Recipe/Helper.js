@@ -1,4 +1,4 @@
-import { StringIsNotStringError, NumberIsNotNumberError } from "./errors"
+import { StringIsNotStringError, NumberIsNotNumberError, PossibleNumberIsNotStringOrNumberError } from "./errors"
 
 /**
  * Helper class for Recipe and Ingredient.
@@ -31,6 +31,11 @@ export default class Helper {
    * Throws NumberIsNotNumberError
    */
   static normalizeNumber(x) {
+    if (!this.isString(x) && !this.isNumber(x)) {
+      throw new PossibleNumberIsNotStringOrNumberError(`During normalizing input to number, 
+                                                      param "${x}" is expected to be a string or number, 
+                                                      it is of type "${typeof x}" instead.`)
+    }
     const y = parseFloat(x)
     if (!this.isNumber(y)) {
       throw new NumberIsNotNumberError(`During normalizing input to number, 

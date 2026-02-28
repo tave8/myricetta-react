@@ -549,9 +549,11 @@ const addIngredientHelper = ({
       // input focus on ingredient name
       focusNewIngredientName()
     } catch (err) {
+      // console.log(err)
       if (err instanceof IngredientNameIsNotValidError) {
         alert("Nome ingrediente non può essere vuoto.")
       } else if (err instanceof QuantityIsNotValidError) {
+        console.log(newIngredientQuantity)
         alert("La quantità deve essere un numero positivo.")
       } else if (err instanceof IngredientNameAlreadyExistsError) {
         alert("Non puoi avere ingredienti con lo stesso nome.")

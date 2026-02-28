@@ -333,6 +333,7 @@ export default class Recipe extends Helper {
     // INGREDIENT QUANTITY VALIDATION
     try {
       ingredientQuantity = this.normalizeNumber(_ingredientQuantity)
+
       if (!this.constructor.isValidQuantity(ingredientQuantity)) {
         throw new QuantityIsNotValidError(_ingredientQuantity)
       }

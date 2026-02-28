@@ -10,6 +10,18 @@ export class StringIsNotStringError extends Error {
   }
 }
 
+export class PossibleNumberIsNotStringOrNumberError extends Error {
+  constructor(userMessage = "") {
+    let newUserMessage = userMessage
+    if (userMessage == null || userMessage == undefined) {
+      newUserMessage = "<user message was nully>"
+    }
+    const initialMessage = "This must be a number as either string or number type. "
+    const finalMessage = (newUserMessage.toString() + initialMessage).trim()
+    super(finalMessage)
+  }
+}
+
 export class IngredientNameNotFoundError extends Error {
   constructor(userMessage = "") {
     let newUserMessage = userMessage
@@ -64,7 +76,7 @@ export class QuantityIsNotValidError extends Error {
     if (userMessage == null || userMessage == undefined) {
       newUserMessage = "<user message was nully>"
     }
-    const initialMessage = "Quantity is not valid. "
+    const initialMessage = " Quantity is not valid. "
     const finalMessage = (newUserMessage.toString() + initialMessage).trim()
     super(finalMessage)
   }
