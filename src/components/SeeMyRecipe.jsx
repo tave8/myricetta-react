@@ -17,10 +17,11 @@ import {
   Nav,
   Table,
 } from "react-bootstrap"
-import { useParams } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import RecipeRemote from "../assets/js/Recipe/RecipeRemote"
 
 const SeeMyRecipe = () => {
+  const navigate = useNavigate()
   const [_recipeInstance, _setRecipeInstance] = useState(new RecipeRemote())
 
   // recipe info
@@ -50,7 +51,7 @@ const SeeMyRecipe = () => {
       .then(() => {
         setIsLoadingRecipe(false)
         setIsErrorRecipe(false)
-        console.log(_recipeInstance.getIngredients())
+        // console.log(_recipeInstance.getIngredients())
         setRecipeName(_recipeInstance.getName())
         setIngredientsData(_recipeInstance.getIngredients())
       })
@@ -74,7 +75,18 @@ const SeeMyRecipe = () => {
                 <Placeholder xs={12} style={{ height: "100%" }} />
               </Placeholder>
             )}
-            {!isLoadingRecipe && <h2 className="text-center">{recipeName}</h2>}
+            {!isLoadingRecipe && (
+              <>
+                <h2 className="text-center">{recipeName}</h2>
+                <Button
+                  onClick={() => {
+                    navigate(`/edit-recipe/${"xx"}`)
+                  }}
+                >
+                  Modifica
+                </Button>
+              </>
+            )}
           </Col>
           {/* RECIPE PHOTO */}
           <Col className="text-center">
@@ -157,6 +169,7 @@ const SeeMyRecipe = () => {
               </Row>
             </Col>
           )}
+          {/* FROM 1 INGREDIENT, CALCULATE THE OTHERS */}
         </Row>
       </Col>
     </Row>

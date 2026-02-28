@@ -46,13 +46,7 @@ const RecipeCalculations = () => {
             {/* PAGE TITLE */}
             <Col>
               <h2 className="text-center">Vedi ricetta</h2>
-              <Button
-                onClick={() => {
-                  navigate(`/edit-recipe/${"xx"}`)
-                }}
-              >
-                Modifica
-              </Button>
+
             </Col>
             {/* FROM 1 INGREDIENT, CALCULATE THE OTHERS */}
             <Col>
