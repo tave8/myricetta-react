@@ -61,13 +61,33 @@ const MyRecipes = () => {
                 </Form>
               </Col>
 
-              {/* user feedback (no results, is loading, is error etc.) */}
+              {/* search: user feedback (is loading, is error etc.) */}
+              {(isLoading || isError) && (
+                <Col xs={12} md={6}>
+                  {/* is loading */}
+                  {isLoading && (
+                    <div className="text-center mt-2 position-absolute">
+                      <Spinner animation="grow" variant="info" />
+                    </div>
+                  )}
+
+                  {/* error */}
+                  {isError && (
+                    <Alert variant="danger" className="mt-2 position-absolute">
+                      <Alert.Heading>Problema durante la ricerca delle ricette.</Alert.Heading>
+                    </Alert>
+                  )}
+                </Col>
+              )}
+
+              {/* search results */}
               <Col xs={12} md={6}>
                 {/* my recipes list */}
                 {myRecipes.length > 0 && !isLoading && !isError && (
-                  <ListGroup className="mt-2 position-absolute">
+                  <ListGroup className="mt-2">
                     {myRecipes.map((myRecipe, idx) => (
                       <ListGroup.Item
+                        className="p-3 fs-4"
                         key={idx}
                         action
                         onClick={() => {
@@ -78,20 +98,6 @@ const MyRecipes = () => {
                       </ListGroup.Item>
                     ))}
                   </ListGroup>
-                )}
-
-                {/* is loading */}
-                {isLoading && (
-                  <div className="text-center mt-2 position-absolute">
-                    <Spinner animation="grow" variant="info" />
-                  </div>
-                )}
-
-                {/* error */}
-                {isError && (
-                  <Alert variant="danger" className="mt-2 position-absolute">
-                    <Alert.Heading>Problema durante la ricerca delle ricette.</Alert.Heading>
-                  </Alert>
                 )}
               </Col>
             </Row>
