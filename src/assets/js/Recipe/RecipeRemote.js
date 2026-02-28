@@ -28,7 +28,11 @@ export default class RecipeRemote extends Recipe {
   async searchMyRecipes(searchQuery) {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
-        const fakeRecipes = [{ name: "pizza buona" }, { name: "pizza2" }, { name: "pizzaccc" }]
+        const fakeRecipes = [
+          { name: "pizza buona", id: "1" },
+          { name: "pizza2", id: "2" },
+          { name: "pizzaccc", id: "3" },
+        ]
         // reject(new Error("failed bebi"))
         resolve(fakeRecipes)
       }, 1000)

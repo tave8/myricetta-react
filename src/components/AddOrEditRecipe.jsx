@@ -12,7 +12,7 @@ import {
   RecipeNameIsNotValidError,
 } from "../assets/js/Recipe/errors"
 import { useParams } from "react-router-dom"
-import RecipeCalculations from "./MyRecipeCalculations"
+import RecipeCalculations from "./SeeMyRecipe"
 
 const RecipeComponent = (props) => {
   // the Recipe instance. must not me touched.

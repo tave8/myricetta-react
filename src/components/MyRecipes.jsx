@@ -2,8 +2,11 @@ import { useEffect, useState } from "react"
 import { Container, Row, Col, CardGroup, Card, Spinner, Alert, Button, Image, Form, ListGroup, Navbar, NavDropdown, Nav, InputGroup } from "react-bootstrap"
 import { Search as SearchIcon } from "react-bootstrap-icons"
 import RecipeRemote from "../assets/js/Recipe/RecipeRemote"
+import { useNavigate } from "react-router-dom"
 
 const MyRecipes = () => {
+  const navigate = useNavigate()
+
   const [_recipeInstance, _setRecipeInstance] = useState(new RecipeRemote())
 
   const [formValues, setFormValues] = useState({
@@ -91,7 +94,7 @@ const MyRecipes = () => {
                         key={idx}
                         action
                         onClick={() => {
-                          console.log(myRecipe)
+                          navigate(`/my-recipes/${myRecipe.id}`)
                         }}
                       >
                         <span className="text-left">{myRecipe.name}</span>

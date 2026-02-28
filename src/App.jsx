@@ -11,7 +11,7 @@ import { PersistGate } from "redux-persist/integration/react"
 // pages components
 import AddOrEditRecipe from "./components/AddOrEditRecipe"
 import MyRecipes from "./components/MyRecipes"
-import MyRecipeCalculations from "./components/MyRecipeCalculations"
+import SeeMyRecipe from "./components/SeeMyRecipe"
 import NotFoundComponent from "./components/NotFound"
 // layout components
 import NavbarComponent from "./components/Navbar"
@@ -30,7 +30,7 @@ function App() {
             <Col xs={12} className="py-3" style={{ flexGrow: 1 }} id="pages-container">
               <Routes>
                 <Route path="/my-recipes" element={<MyRecipes />} />
-                <Route path="/my-recipes/:recipeId" element={<MyRecipeCalculations />} />
+                <Route path="/my-recipes/:recipeId" element={<SeeMyRecipe />} />
                 <Route path="/add-recipe" element={<AddOrEditRecipe />} />
                 <Route path="/edit-recipe/:recipeId" element={<AddOrEditRecipe isEditMode={true} />} />
                 <Route path="*" element={<NotFoundComponent />} />
