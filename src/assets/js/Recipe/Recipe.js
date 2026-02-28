@@ -38,6 +38,31 @@ export default class Recipe extends Helper {
   }
 
   /**
+   * Override every property
+   */
+  overrideSelfFromObj(recipeObj) {
+    // must be object
+    if (typeof recipeObj != "object") {
+      throw new Error(`must be object`)
+    }
+    // must have recipe name
+    if (!this.constructor.isValidRecipeName(recipeObj.name)) {
+      throw new Error(`recipe name must exist and must be valid`)
+    }
+    // must have recipe id
+    if (!Object.hasOwn(recipeObj, "id")) {
+      throw new Error(`recipe id must exist`)
+    }
+    // must have ingredients array
+    if (!Array.isArray(recipeObj.ingredients)) {
+      throw new Error(`recipe ingredients must be an array`)
+    }
+    this.setName(recipeObj.name)
+    this.setId(recipeObj.id)
+    this.addIngredients(recipeObj.ingredients)
+  }
+
+  /**
    * Throws StringIsNotStringError
    *
    */
@@ -308,6 +333,9 @@ export default class Recipe extends Helper {
   }
 
   addIngredients(ingredientsAsList) {
+    if (!Array.isArray(ingredientsAsList)) {
+      throw new Error(`Ingredient list must be an array. It is of type "${typeof ingredientsAsList}" instead.`)
+    }
     ingredientsAsList.forEach((ingredientInfo) => this.addIngredient(ingredientInfo))
   }
 
@@ -459,6 +487,10 @@ export default class Recipe extends Helper {
     }
 
     this.name = recipeName
+  }
+
+  setId(_recipeId) {
+    this.id = _recipeId
   }
 
   /**

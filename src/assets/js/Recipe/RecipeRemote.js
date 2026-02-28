@@ -16,13 +16,14 @@ export default class RecipeRemote extends Recipe {
     this.apiUrl = args.apiUrl
   }
 
-  async getRecipeById(recipeId) {
+  async getRecipeByIdAndOverrideSelf(recipeId) {
     if (!recipeId) {
       throw new Error(`Must provide recipeId. "${recipeId}" was given.`)
     }
     return new Promise((resolve, reject) => {
       setTimeout(() => {
-        resolve({
+        const recipe = {
+          id: "3234234",
           name: "Pizza Bella",
           ingredients: [
             {
@@ -33,7 +34,10 @@ export default class RecipeRemote extends Recipe {
             },
           ],
           photoUrl: "https://placehold.co/600x400",
-        })
+        }
+        this.overrideSelfFromObj(recipe)
+        // console.log(this)
+        resolve()
       }, 1000)
     })
   }

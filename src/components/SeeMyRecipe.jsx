@@ -24,13 +24,12 @@ const SeeMyRecipe = () => {
   const [_recipeInstance, _setRecipeInstance] = useState(new RecipeRemote())
 
   // recipe info
-  const [recipe, setRecipe] = useState({
-    name: "",
-    ingredients: [],
-    photoUrl: null,
-  })
+  const [recipeName, setRecipeName] = useState("")
+  const [recipePhotoUrl, setRecipePhotoUrl] = useState(null)
+  const [ingredientsData, setIngredientsData] = useState(null)
+  const [totIngredientsRounded, setTotIngredientsRounded] = useState(null)
 
-  const [isLoadingRecipe, setIsLoadingRecipe] = useState(false)
+  const [isLoadingRecipe, setIsLoadingRecipe] = useState(true)
   const [isErrorRecipe, setIsErrorRecipe] = useState(false)
 
   const [isLoadingPhoto, setIsLoadingPhoto] = useState(true)
@@ -45,15 +44,18 @@ const SeeMyRecipe = () => {
     if (!recipeId) {
       throw new Error(`Recipe id was not provided in route.`)
     }
-    console.log(_recipeInstance)
 
     _recipeInstance
-      .getRecipeById("pizza")
-      .then((remoteRecipe) => {
+      .getRecipeByIdAndOverrideSelf("pizza")
+      .then(() => {
         // console.log(recipe)
         setIsLoadingRecipe(false)
         setIsErrorRecipe(false)
-        setRecipe(remoteRecipe)
+        // setRecipe()
+        // console.log(_recipeInstance.getIngredients())
+
+        setRecipeName(_recipeInstance.getName())
+        setIngredientsData(_recipeInstance.getIngredients())
       })
       .catch((err) => {
         console.error(err)
@@ -70,24 +72,24 @@ const SeeMyRecipe = () => {
           {/* PAGE TITLE */}
           <Col>
             {/* recipe name placeholder */}
-            {isLoadingPhoto && (
+            {isLoadingRecipe && (
               <Placeholder as="div" animation="wave" style={{ height: "50px", width: "100%" }}>
                 <Placeholder xs={12} style={{ height: "100%" }} />
               </Placeholder>
             )}
-            {!isLoadingRecipe && <h2 className="text-center">{recipe.name}</h2>}
+            {!isLoadingRecipe && <h2 className="text-center">{recipeName}</h2>}
           </Col>
           {/* RECIPE PHOTO */}
           <Col className="text-center">
             {/* image placeholder */}
-            {isLoadingPhoto && (
+            {/* {isLoadingPhoto && (
               <Placeholder as="div" animation="wave" style={{ height: "200px", width: "100%" }}>
                 <Placeholder xs={12} style={{ height: "200px" }} />
               </Placeholder>
-            )}
-            <Image
-              src={recipe.photoUrl}
-              alt={recipe.name}
+            )} */}
+            {/* <Image
+              src={recipePhotoUrl}
+              alt={recipeName}
               fluid
               style={{ height: "200px" }}
               onLoad={() => {
@@ -96,7 +98,7 @@ const SeeMyRecipe = () => {
               onError={() => {
                 setIsLoadingPhoto(false)
               }}
-            />
+            /> */}
           </Col>
           {/* FROM 1 INGREDIENT, CALCULATE THE OTHERS */}
           <Col>
@@ -109,7 +111,7 @@ const SeeMyRecipe = () => {
                 <Col>
                   <Row className="justify-content-center">
                     <Col xs={12}>
-                      {recipe.ingredients.length > 0 && (
+                      {ingredientsData?.ingredients.length > 0 && (
                         <Table striped bordered hover style={{ tableLayout: "fixed", width: "100%" }}>
                           <colgroup>
                             <col style={{ width: "70%" }} />
@@ -125,7 +127,7 @@ const SeeMyRecipe = () => {
 
                           <tbody>
                             {/* exist ingredients */}
-                            {recipe.ingredients.map((ingredient) => {
+                            {ingredientsData.ingredients.map((ingredient) => {
                               return (
                                 <tr key={ingredient.id}>
                                   <td>{ingredient.name}</td>
@@ -135,10 +137,10 @@ const SeeMyRecipe = () => {
                             })}
                           </tbody>
                           <tfoot>
-                            {recipe.ingredients.length > 0 && (
+                            {ingredientsData.ingredients.length > 0 && (
                               <tr className="text-end fw-bold">
                                 <td>TOTALE:</td>
-                                <td>{recipe.totIngredientsRounded} g</td>
+                                <td>{ingredientsData.totIngredientsRounded} g</td>
                               </tr>
                             )}
                           </tfoot>
