@@ -1,24 +1,8 @@
 import { useEffect, useState } from "react"
-import {
-  Container,
-  Row,
-  Col,
-  CardGroup,
-  Card,
-  Placeholder,
-  Spinner,
-  Alert,
-  Button,
-  Image,
-  Form,
-  ListGroup,
-  Navbar,
-  NavDropdown,
-  Nav,
-  Table,
-} from "react-bootstrap"
+import { Row, Col, Placeholder, Spinner, Alert, Button, Image, Form, Table } from "react-bootstrap"
 import { useNavigate, useParams } from "react-router-dom"
 import RecipeRemote from "../assets/js/Recipe/RecipeRemote"
+import RecipeCalculations from "./recipe-calculations/RecipeCalculations"
 
 const SeeMyRecipe = () => {
   const navigate = useNavigate()
@@ -169,7 +153,9 @@ const SeeMyRecipe = () => {
               </Row>
             </Col>
           )}
-          {/* FROM 1 INGREDIENT, CALCULATE THE OTHERS */}
+          {/* RECIPE CALCULATIONS (from one ingredient to others, 
+              from recipe quantity to ingredients) */}
+          <RecipeCalculations />
         </Row>
       </Col>
     </Row>
