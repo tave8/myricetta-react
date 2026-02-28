@@ -24,7 +24,15 @@ export default class RecipeRemote extends Recipe {
       setTimeout(() => {
         resolve({
           name: "Pizza Bella",
-          photoUrl: "https://placehold.co/600x400"
+          ingredients: [
+            {
+              id: "1",
+              name: "malto",
+              quantity: 10.342,
+              quantityRounded: 10.34,
+            },
+          ],
+          photoUrl: "https://placehold.co/600x400",
         })
       }, 1000)
     })

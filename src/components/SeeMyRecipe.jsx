@@ -26,6 +26,7 @@ const SeeMyRecipe = () => {
   // recipe info
   const [recipe, setRecipe] = useState({
     name: "",
+    ingredients: [],
     photoUrl: null,
   })
 
@@ -97,7 +98,58 @@ const SeeMyRecipe = () => {
               }}
             />
           </Col>
-          
+          {/* FROM 1 INGREDIENT, CALCULATE THE OTHERS */}
+          <Col>
+            <Row className="flex-column g-3">
+              {/* title */}
+              <Col>{/* <h4>Ho un ingrediente, calcola gli altri</h4> */}</Col>
+
+              {/* ingredients list */}
+              {!isLoadingRecipe && !isErrorRecipe && (
+                <Col>
+                  <Row className="justify-content-center">
+                    <Col xs={12}>
+                      {recipe.ingredients.length > 0 && (
+                        <Table striped bordered hover style={{ tableLayout: "fixed", width: "100%" }}>
+                          <colgroup>
+                            <col style={{ width: "70%" }} />
+                            <col style={{ width: "30%" }} />
+                          </colgroup>
+
+                          <thead>
+                            <tr>
+                              <th>Ingr.</th>
+                              <th className="text-end">Q.tà</th>
+                            </tr>
+                          </thead>
+
+                          <tbody>
+                            {/* exist ingredients */}
+                            {recipe.ingredients.map((ingredient) => {
+                              return (
+                                <tr key={ingredient.id}>
+                                  <td>{ingredient.name}</td>
+                                  <td className="text-end">{ingredient.quantityRounded} g</td>
+                                </tr>
+                              )
+                            })}
+                          </tbody>
+                          <tfoot>
+                            {recipe.ingredients.length > 0 && (
+                              <tr className="text-end fw-bold">
+                                <td>TOTALE:</td>
+                                <td>{recipe.totIngredientsRounded} g</td>
+                              </tr>
+                            )}
+                          </tfoot>
+                        </Table>
+                      )}
+                    </Col>
+                  </Row>
+                </Col>
+              )}
+            </Row>
+          </Col>
         </Row>
       </Col>
     </Row>
