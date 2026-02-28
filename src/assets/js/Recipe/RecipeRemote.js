@@ -32,6 +32,18 @@ export default class RecipeRemote extends Recipe {
               quantity: 10.342,
               quantityRounded: 10.34,
             },
+            {
+              id: "2",
+              name: "lievito",
+              quantity: 10.342,
+              quantityRounded: 10.34,
+            },
+            {
+              id: "3",
+              name: "acqua",
+              quantity: 45,
+              quantityRounded: 45,
+            },
           ],
           photoUrl: "https://placehold.co/600x400",
         }

@@ -46,14 +46,11 @@ const SeeMyRecipe = () => {
     }
 
     _recipeInstance
-      .getRecipeByIdAndOverrideSelf("pizza")
+      .getRecipeByIdAndOverrideSelf(recipeId)
       .then(() => {
-        // console.log(recipe)
         setIsLoadingRecipe(false)
         setIsErrorRecipe(false)
-        // setRecipe()
-        // console.log(_recipeInstance.getIngredients())
-
+        console.log(_recipeInstance.getIngredients())
         setRecipeName(_recipeInstance.getName())
         setIngredientsData(_recipeInstance.getIngredients())
       })
@@ -100,58 +97,66 @@ const SeeMyRecipe = () => {
               }}
             /> */}
           </Col>
-          {/* FROM 1 INGREDIENT, CALCULATE THE OTHERS */}
-          <Col>
-            <Row className="flex-column g-3">
-              {/* title */}
-              <Col>{/* <h4>Ho un ingrediente, calcola gli altri</h4> */}</Col>
-
-              {/* ingredients list */}
-              {!isLoadingRecipe && !isErrorRecipe && (
+          {/* INGREDIENTS */}
+          {ingredientsData && (
+            <Col>
+              <Row className="flex-column g-3">
+                {/* title */}
                 <Col>
-                  <Row className="justify-content-center">
-                    <Col xs={12}>
-                      {ingredientsData?.ingredients.length > 0 && (
-                        <Table striped bordered hover style={{ tableLayout: "fixed", width: "100%" }}>
-                          <colgroup>
-                            <col style={{ width: "70%" }} />
-                            <col style={{ width: "30%" }} />
-                          </colgroup>
-
-                          <thead>
-                            <tr>
-                              <th>Ingr.</th>
-                              <th className="text-end">Q.tà</th>
-                            </tr>
-                          </thead>
-
-                          <tbody>
-                            {/* exist ingredients */}
-                            {ingredientsData.ingredients.map((ingredient) => {
-                              return (
-                                <tr key={ingredient.id}>
-                                  <td>{ingredient.name}</td>
-                                  <td className="text-end">{ingredient.quantityRounded} g</td>
-                                </tr>
-                              )
-                            })}
-                          </tbody>
-                          <tfoot>
-                            {ingredientsData.ingredients.length > 0 && (
-                              <tr className="text-end fw-bold">
-                                <td>TOTALE:</td>
-                                <td>{ingredientsData.totIngredientsRounded} g</td>
-                              </tr>
-                            )}
-                          </tfoot>
-                        </Table>
-                      )}
-                    </Col>
-                  </Row>
+                  <h4>Ingredienti</h4>
                 </Col>
-              )}
-            </Row>
-          </Col>
+
+                {/* ingredients list */}
+                {!isLoadingRecipe && !isErrorRecipe && (
+                  <Col>
+                    <Row className="justify-content-center">
+                      <Col xs={12}>
+                        {ingredientsData.ingredients.length > 0 && (
+                          <Table striped bordered hover style={{ tableLayout: "fixed", width: "100%" }}>
+                            <colgroup>
+                              <col style={{ width: "50%" }} />
+                              <col style={{ width: "25%" }} />
+                              <col style={{ width: "25%" }} />
+                            </colgroup>
+
+                            <thead>
+                              <tr>
+                                <th>Ingr.</th>
+                                <th className="text-end">Q.tà</th>
+                                <th className="text-end">%</th>
+                              </tr>
+                            </thead>
+
+                            <tbody>
+                              {/* exist ingredients */}
+                              {ingredientsData.ingredients.map((ingredient) => {
+                                return (
+                                  <tr key={ingredient.id}>
+                                    <td>{ingredient.name}</td>
+                                    <td className="text-end">{ingredient.quantityRounded} g</td>
+                                    <td className="text-end">{ingredient.percentageRounded} %</td>
+                                  </tr>
+                                )
+                              })}
+                            </tbody>
+                            <tfoot>
+                              {ingredientsData.ingredients.length > 0 && (
+                                <tr className="text-end fw-bold">
+                                  <td>TOTALE:</td>
+                                  <td>{ingredientsData.totIngredientsRounded} g</td>
+                                  <td></td>
+                                </tr>
+                              )}
+                            </tfoot>
+                          </Table>
+                        )}
+                      </Col>
+                    </Row>
+                  </Col>
+                )}
+              </Row>
+            </Col>
+          )}
         </Row>
       </Col>
     </Row>

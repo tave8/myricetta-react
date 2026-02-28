@@ -490,6 +490,9 @@ export default class Recipe extends Helper {
   }
 
   setId(_recipeId) {
+    if (!_recipeId) {
+      throw new Error(`nully recipe id given`)
+    }
     this.id = _recipeId
   }
 
