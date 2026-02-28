@@ -18,8 +18,21 @@ export default class RecipeRemote extends Recipe {
 
   async add() {
     const recipeToSave = this.getRecipeToSave()
-    
+
     return recipeToSave
+  }
+
+  /**
+   * Search my recipes
+   */
+  async searchMyRecipes(searchQuery) {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        const fakeRecipes = [{ name: "pizza buona" }]
+        // reject(new Error("failed bebi"))
+        resolve(fakeRecipes)
+      }, 2000)
+    })
   }
 
   async getById(recipeId) {

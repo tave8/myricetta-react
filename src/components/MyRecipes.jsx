@@ -1,14 +1,11 @@
 import { useEffect, useState } from "react"
-import { Container, Row, Col, CardGroup, Card, Spinner, Alert, Button, Image, Form, ListGroup, Navbar, NavDropdown, Nav } from "react-bootstrap"
+import { Container, Row, Col, CardGroup, Card, Spinner, Alert, Button, Image, Form, ListGroup, Navbar, NavDropdown, Nav, InputGroup } from "react-bootstrap"
+import { Search as SearchIcon } from "react-bootstrap-icons"
 import RecipeRemote from "../assets/js/Recipe/RecipeRemote"
 
-
-
-const GLOBAL = {
-  lastTimeout: null,
-}
-
 const MyRecipes = () => {
+  const [_recipeInstance, _setRecipeInstance] = useState(new RecipeRemote())
+
   const [formValues, setFormValues] = useState({
     search: "",
   })
@@ -36,26 +33,30 @@ const MyRecipes = () => {
                 <Form
                   onSubmit={(event) => {
                     event.preventDefault()
+                    handleSearchChange({ _recipeInstance, setFormValues, setMyRecipes, setIsLoading, setIsError })(formValues.search)
                   }}
                 >
                   <Form.Group>
-                    <Form.Control
-                      type="search"
-                      autoFocus
-                      placeholder="Cerca..."
-                      value={formValues.search}
-                      onChange={(event) => {
-                        const userSearch = event.target.value
-                        setFormValues({ search: userSearch })
-
-                        // setIsLoading(true)
-                        // delay fetching remote cities
-                        // clearTimeout(GLOBAL.lastTimeout)
-                        // GLOBAL.lastTimeout = setTimeout(() => {
-                        handleSearchChange({ setFormValues, setMyRecipes, setIsLoading, setIsError })(userSearch)
-                        // }, 600)
-                      }}
-                    />
+                    <InputGroup>
+                      <Form.Control
+                        type="search"
+                        autoFocus
+                        placeholder="Cerca..."
+                        value={formValues.search}
+                        onChange={(event) => {
+                          const userSearch = event.target.value
+                          setFormValues({ search: userSearch })
+                        }}
+                      />
+                      <Button
+                        variant="outline-primary"
+                        onClick={() => {
+                          handleSearchChange({ _recipeInstance, setFormValues, setMyRecipes, setIsLoading, setIsError })(formValues.search)
+                        }}
+                      >
+                        <SearchIcon />
+                      </Button>
+                    </InputGroup>
                   </Form.Group>
                 </Form>
               </Col>
@@ -64,23 +65,13 @@ const MyRecipes = () => {
               <Col xs={12} md={6}>
                 {/* my recipes list */}
                 {myRecipes.length > 0 && !isLoading && !isError && (
-                  <ListGroup className="mt-5 position-absolute">
+                  <ListGroup className="mt-2 position-absolute">
                     {myRecipes.map((myRecipe, idx) => (
                       <ListGroup.Item
                         key={idx}
                         action
                         onClick={() => {
                           console.log(myRecipe)
-                          // set the selected city
-                          // props.setSelectedCity({
-                          //   lat: city.lat,
-                          //   lon: city.lon,
-                          //   name: city.name,
-                          //   state: city.state,
-                          //   country: city.country,
-                          // })
-                          // navigate("/city-details")
-                          // console.log(props)
                         }}
                       >
                         <span className="text-left">{myRecipe.name}</span>
@@ -89,16 +80,9 @@ const MyRecipes = () => {
                   </ListGroup>
                 )}
 
-                {/* no my recipes found */}
-                {myRecipes.length == 0 && formValues.search.length > 0 && !isLoading && !isError && (
-                  <Alert variant="info" className="mt-2 position-absolute">
-                    <Alert.Heading>Nessuna ricetta trovata</Alert.Heading>
-                  </Alert>
-                )}
-
                 {/* is loading */}
                 {isLoading && (
-                  <div className="text-center mt-3 position-absolute">
+                  <div className="text-center mt-2 position-absolute">
                     <Spinner animation="grow" variant="info" />
                   </div>
                 )}
@@ -127,23 +111,23 @@ const MyRecipes = () => {
 }
 
 const handleSearchChange = (componentInfo) => {
-  const { setFormValues, setMyRecipes, setIsLoading, setIsError } = componentInfo
+  const { _recipeInstance, setFormValues, setMyRecipes, setIsLoading, setIsError } = componentInfo
   return async (userSearch) => {
-    // if (userSearch.length == 0) {
-    //   // empty
-    //   setIsLoadingCities(false)
-    //   setCitiesList([])
-    //   return
-    // }
+    if (userSearch.length == 0) {
+      // empty
+      setIsLoading(false)
+      setIsError(false)
+      setMyRecipes([])
+      return
+    }
 
     try {
       setIsLoading(true)
       setIsError(false)
-      // const weatherApi = new OpenWeatherMap({ prettify: true })
-      // const citiesList = await weatherApi.getCitySuggestions({ searchQuery: userSearch })
+      const myRecipes = await _recipeInstance.searchMyRecipes({ searchQuery: userSearch })
       setIsLoading(false)
       setIsError(false)
-      // setMyRecipes(citiesList)
+      setMyRecipes(myRecipes)
     } catch (err) {
       setIsLoading(false)
       setIsError(true)
