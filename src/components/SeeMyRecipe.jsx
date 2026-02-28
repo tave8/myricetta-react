@@ -1,5 +1,22 @@
 import { useEffect, useState } from "react"
-import { Container, Row, Col, CardGroup, Card, Spinner, Alert, Button, Image, Form, ListGroup, Navbar, NavDropdown, Nav, Table } from "react-bootstrap"
+import {
+  Container,
+  Row,
+  Col,
+  CardGroup,
+  Card,
+  Placeholder,
+  Spinner,
+  Alert,
+  Button,
+  Image,
+  Form,
+  ListGroup,
+  Navbar,
+  NavDropdown,
+  Nav,
+  Table,
+} from "react-bootstrap"
 import { useParams } from "react-router-dom"
 import RecipeRemote from "../assets/js/Recipe/RecipeRemote"
 
@@ -15,6 +32,8 @@ const SeeMyRecipe = () => {
   const [isLoadingRecipe, setIsLoadingRecipe] = useState(false)
   const [isErrorRecipe, setIsErrorRecipe] = useState(false)
 
+  const [isLoadingPhoto, setIsLoadingPhoto] = useState(true)
+
   const urlParams = useParams()
 
   /**
@@ -26,14 +45,19 @@ const SeeMyRecipe = () => {
       throw new Error(`Recipe id was not provided in route.`)
     }
     console.log(_recipeInstance)
+
     _recipeInstance
       .getRecipeById("pizza")
       .then((remoteRecipe) => {
         // console.log(recipe)
+        setIsLoadingRecipe(false)
+        setIsErrorRecipe(false)
         setRecipe(remoteRecipe)
       })
       .catch((err) => {
         console.error(err)
+        setIsLoadingRecipe(false)
+        setIsErrorRecipe(true)
       })
   }, [])
 
@@ -44,11 +68,36 @@ const SeeMyRecipe = () => {
         <Row className="flex-column gap-5">
           {/* PAGE TITLE */}
           <Col>
-            <h2 className="text-center">{recipe.name}</h2>
+            {/* recipe name placeholder */}
+            {isLoadingPhoto && (
+              <Placeholder as="div" animation="wave" style={{ height: "50px", width: "100%" }}>
+                <Placeholder xs={12} style={{ height: "100%" }} />
+              </Placeholder>
+            )}
+            {!isLoadingRecipe && <h2 className="text-center">{recipe.name}</h2>}
           </Col>
+          {/* RECIPE PHOTO */}
           <Col className="text-center">
-            <Image src={recipe.photoUrl} alt={recipe.name} fluid style={{ height: "200px" }} />
+            {/* image placeholder */}
+            {isLoadingPhoto && (
+              <Placeholder as="div" animation="wave" style={{ height: "200px", width: "100%" }}>
+                <Placeholder xs={12} style={{ height: "200px" }} />
+              </Placeholder>
+            )}
+            <Image
+              src={recipe.photoUrl}
+              alt={recipe.name}
+              fluid
+              style={{ height: "200px" }}
+              onLoad={() => {
+                setIsLoadingPhoto(false)
+              }}
+              onError={() => {
+                setIsLoadingPhoto(false)
+              }}
+            />
           </Col>
+          
         </Row>
       </Col>
     </Row>
