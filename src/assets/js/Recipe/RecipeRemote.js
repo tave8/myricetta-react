@@ -16,6 +16,20 @@ export default class RecipeRemote extends Recipe {
     this.apiUrl = args.apiUrl
   }
 
+  async getRecipeById(recipeId) {
+    if (!recipeId) {
+      throw new Error(`Must provide recipeId. "${recipeId}" was given.`)
+    }
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        resolve({
+          name: "Pizza Bella",
+          photoUrl: "https://placehold.co/600x400"
+        })
+      }, 1000)
+    })
+  }
+
   async add() {
     const recipeToSave = this.getRecipeToSave()
 
