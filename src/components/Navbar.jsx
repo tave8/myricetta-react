@@ -14,7 +14,7 @@ const NavbarComponent = (props) => {
     <Col xs={12} className="p-0" style={{}}>
       <Navbar expand="lg" expanded={expanded} onToggle={setExpanded} className="bg-body-tertiary">
         <Container fluid>
-          <Navbar.Brand as={Link} to="/add-recipe" onClick={closeNavbar}>
+          <Navbar.Brand as={Link} to="/my-recipes" onClick={closeNavbar}>
             myricetta
           </Navbar.Brand>
 

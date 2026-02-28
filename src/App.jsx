@@ -29,6 +29,7 @@ function App() {
             {/* PAGES/ROUTES */}
             <Col xs={12} className="py-3" style={{ flexGrow: 1 }} id="pages-container">
               <Routes>
+                <Route path="/" element={<MyRecipes />} />
                 <Route path="/my-recipes" element={<MyRecipes />} />
                 <Route path="/my-recipes/:recipeId" element={<SeeMyRecipe />} />
                 <Route path="/add-recipe" element={<AddOrEditRecipe />} />
