@@ -10,14 +10,13 @@ const SeeMyRecipe = () => {
 
   // recipe info
   const [recipeName, setRecipeName] = useState("")
-  const [recipePhotoUrl, setRecipePhotoUrl] = useState(null)
+  // const [recipePhotoUrl, setRecipePhotoUrl] = useState(null)
   const [ingredientsData, setIngredientsData] = useState(null)
-  const [totIngredientsRounded, setTotIngredientsRounded] = useState(null)
 
   const [isLoadingRecipe, setIsLoadingRecipe] = useState(true)
   const [isErrorRecipe, setIsErrorRecipe] = useState(false)
 
-  const [isLoadingPhoto, setIsLoadingPhoto] = useState(true)
+  // const [isLoadingPhoto, setIsLoadingPhoto] = useState(true)
 
   const urlParams = useParams()
 
@@ -153,9 +152,10 @@ const SeeMyRecipe = () => {
               </Row>
             </Col>
           )}
+
           {/* RECIPE CALCULATIONS (from one ingredient to others, 
               from recipe quantity to ingredients) */}
-          <RecipeCalculations />
+          {ingredientsData && <RecipeCalculations _recipeInstance={_recipeInstance} />}
         </Row>
       </Col>
     </Row>

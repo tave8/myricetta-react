@@ -2,11 +2,11 @@ import RecipeRemote from "../../assets/js/Recipe/RecipeRemote"
 import OneIngredientToOthers from "./OneIngredientToOthers"
 import RecipeQuantityToIngredients from "./RecipeQuantityToIngredients"
 
-const RecipeCalculations = () => {
+const RecipeCalculations = ({ _recipeInstance }) => {
   return (
     <>
-      {/* <OneIngredientToOthers />
-      <RecipeQuantityToIngredients /> */}
+      <OneIngredientToOthers _recipeInstance={_recipeInstance} />
+      {/* <RecipeQuantityToIngredients /> */}
     </>
   )
 }

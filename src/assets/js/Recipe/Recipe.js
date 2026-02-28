@@ -62,6 +62,10 @@ export default class Recipe extends Helper {
     this.addIngredients(recipeObj.ingredients)
   }
 
+  getOnlyIngredientNames() {
+    return this.ingredients.map((ingredient) => ingredient.getName())
+  }
+
   /**
    * Throws StringIsNotStringError
    *

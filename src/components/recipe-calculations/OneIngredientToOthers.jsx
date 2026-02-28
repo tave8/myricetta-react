@@ -1,11 +1,15 @@
 import { useState } from "react"
+import { Row, Col, Placeholder, Spinner, Alert, Button, Image, Form, Table } from "react-bootstrap"
+
 import { QuantityIsNotValidError } from "../../assets/js/Recipe/errors"
 
-const OneIngredientToOthers = () => {
+const OneIngredientToOthers = ({ _recipeInstance }) => {
   // feature: from one ingredient, calculate others
   const [knownIngredientName, setKnownIngredientName] = useState("")
   const [knownIngredientQuantity, setKnownIngredientQuantity] = useState("")
-  const [ingredientsCalculationsFromIngredient, setIngredientsCalculationsFromIngredient] = useState(null)
+  // const [ingredientsCalculationsFromIngredient, setIngredientsCalculationsFromIngredient] = useState(null)
+
+  console.log(_recipeInstance)
 
   return (
     <>
@@ -32,25 +36,25 @@ const OneIngredientToOthers = () => {
                       if (isOptionEmpty) {
                         setKnownIngredientQuantity("")
                       }
-                      const context = {
-                        _recipeInstance,
-                        knownIngredientName: val,
-                        knownIngredientQuantity,
-                        setIngredientsCalculationsFromIngredient,
-                      }
-                      calcIngredientsFromOneIngredientHelper(context)()
-                      // focusKnownIngredientQuantity()
-                      setTimeout(() => {
-                        scrollIntoViewOfKnownIngredientNameInput()
-                      }, 100)
+                      // const context = {
+                      //   _recipeInstance,
+                      //   knownIngredientName: val,
+                      //   knownIngredientQuantity,
+                      //   setIngredientsCalculationsFromIngredient,
+                      // }
+                      // calcIngredientsFromOneIngredientHelper(context)()
+                      // // focusKnownIngredientQuantity()
+                      // setTimeout(() => {
+                      //   scrollIntoViewOfKnownIngredientNameInput()
+                      // }, 100)
                     }}
                   >
                     <option value="">Seleziona ingrediente...</option>
-                    {ingredientsCalculations?.ingredients.map((ingredient) => (
+                    {/* {ingredientsCalculations?.ingredients.map((ingredient) => (
                       <option key={ingredient.id} value={ingredient.name}>
                         {ingredient.name}
                       </option>
-                    ))}
+                    ))} */}
                   </Form.Select>
                 </Form.Group>
               </Col>
@@ -90,50 +94,55 @@ const OneIngredientToOthers = () => {
             </Row>
           </Col>
           {/* ingredients list */}
-          {knownIngredientQuantity && knownIngredientName && (
-            <Col>
-              <Row className="justify-content-center">
-                <Col xs={12}>
-                  {ingredientsCalculationsFromIngredient?.ingredients.length > 0 && (
-                    <Table striped bordered hover style={{ tableLayout: "fixed", width: "100%" }}>
-                      <colgroup>
-                        <col style={{ width: "70%" }} />
-                        <col style={{ width: "30%" }} />
-                      </colgroup>
 
-                      <thead>
-                        <tr>
-                          <th>Ingr.</th>
-                          <th className="text-end">Q.tà</th>
-                        </tr>
-                      </thead>
+          {
+            knownIngredientQuantity &&
+              knownIngredientName &&
+              // <Col>
+              //   <Row className="justify-content-center">
+              //     <Col xs={12}>
+              //       {ingredientsCalculationsFromIngredient?.ingredients.length > 0 && (
+              //         <Table striped bordered hover style={{ tableLayout: "fixed", width: "100%" }}>
+              //           <colgroup>
+              //             <col style={{ width: "70%" }} />
+              //             <col style={{ width: "30%" }} />
+              //           </colgroup>
 
-                      <tbody>
-                        {/* exist ingredients */}
-                        {ingredientsCalculationsFromIngredient?.ingredients.map((ingredient) => {
-                          const isIngredientInListSameAsKnownIngredient = ingredient.name == knownIngredientName
-                          return (
-                            <tr key={ingredient.id} className={isIngredientInListSameAsKnownIngredient ? "table-primary" : ""}>
-                              <td>{ingredient.name}</td>
-                              <td className="text-end">{ingredient.quantityRounded} g</td>
-                            </tr>
-                          )
-                        })}
-                      </tbody>
-                      <tfoot>
-                        {ingredientsCalculationsFromIngredient?.ingredients.length > 0 && (
-                          <tr className="text-end fw-bold">
-                            <td>TOTALE:</td>
-                            <td>{ingredientsCalculationsFromIngredient.totIngredientsRounded} g</td>
-                          </tr>
-                        )}
-                      </tfoot>
-                    </Table>
-                  )}
-                </Col>
-              </Row>
-            </Col>
-          )}
+              //           <thead>
+              //             <tr>
+              //               <th>Ingr.</th>
+              //               <th className="text-end">Q.tà</th>
+              //             </tr>
+              //           </thead>
+
+              //           <tbody>
+              {
+                /* exist ingredients */
+              }
+            // {ingredientsCalculationsFromIngredient?.ingredients.map((ingredient) => {
+            //   const isIngredientInListSameAsKnownIngredient = ingredient.name == knownIngredientName
+            //   return (
+            //     <tr key={ingredient.id} className={isIngredientInListSameAsKnownIngredient ? "table-primary" : ""}>
+            //       <td>{ingredient.name}</td>
+            //       <td className="text-end">{ingredient.quantityRounded} g</td>
+            //     </tr>
+            //   )
+            // })}
+            //   </tbody>
+            //   <tfoot>
+            //     {ingredientsCalculationsFromIngredient?.ingredients.length > 0 && (
+            //       <tr className="text-end fw-bold">
+            //         <td>TOTALE:</td>
+            //         <td>{ingredientsCalculationsFromIngredient.totIngredientsRounded} g</td>
+            //       </tr>
+            //     )}
+            //   </tfoot>
+            // </Table>
+          }
+          {/* </Col> */}
+          {/* </Row> */}
+          {/* </Col> */}
+          {/* )} */}
         </Row>
       </Col>
     </>
@@ -176,6 +185,5 @@ const calcIngredientsFromOneIngredientHelper = ({
 const scrollIntoViewOfKnownIngredientNameInput = () => {
   // document.getElementById("known-ingredient-name-input").scrollIntoView()
 }
-
 
 export default OneIngredientToOthers
