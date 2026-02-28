@@ -32,15 +32,15 @@ const RecipeComponent = (props) => {
     focusNewIngredientName()
     // if this component is edit mode
     if (props.isEditMode) {
-      const recipeId = urlParams.recipeId
-      _recipeInstance
-        .getByIdRemote(recipeId)
-        .then((remoteRecipe) => {
-          console.log(remoteRecipe)
-        })
-        .catch((err) => {
-          console.error(err)
-        })
+      // const recipeId = urlParams.recipeId
+      // _recipeInstance
+      //   .getByIdRemote(recipeId)
+      //   .then((remoteRecipe) => {
+      //     console.log(remoteRecipe)
+      //   })
+      //   .catch((err) => {
+      //     console.error(err)
+      //   })
     }
   }, [])
 
@@ -51,7 +51,10 @@ const RecipeComponent = (props) => {
         <Row className="flex-column gap-5">
           {/* PAGE TITLE */}
           <Col>
-            <h2 className="text-center">{recipeName.trim() == "" ? "Aggiungi ricetta" : "Ricetta per " + recipeName}</h2>
+            {/* EDIT MODE */}
+            {props.isEditMode && <h2 className="text-center">{recipeName.trim() == "" ? "Modifica ricetta" : "Ricetta per " + recipeName}</h2>}
+            {/* ADD MODE */}
+            {!props.isEditMode && <h2 className="text-center">{recipeName.trim() == "" ? "Aggiungi ricetta" : "Ricetta per " + recipeName}</h2>}
           </Col>
           {/* RECIPE INFO (name, photo etc.) */}
           <Col>
@@ -234,19 +237,38 @@ const RecipeComponent = (props) => {
           </Col>
           {/* RECIPE ACTIONS (save recipe, etc.) */}
           <Col>
-            <Button
-              variant="success"
-              onClick={() => {
-                const context = {
-                  _recipeInstance,
-                  recipeName,
-                  ingredientsCalculations,
-                }
-                addRecipeHelper(context)()
-              }}
-            >
-              Aggiungi ricetta
-            </Button>
+            {/* EDIT MODE */}
+            {props.isEditMode && (
+              <Button
+                variant="success"
+                onClick={() => {
+                  // const context = {
+                  //   _recipeInstance,
+                  //   recipeName,
+                  //   ingredientsCalculations,
+                  // }
+                  // addRecipeHelper(context)()
+                }}
+              >
+                Modifica ricetta
+              </Button>
+            )}
+            {/* ADD MODE */}
+            {!props.isEditMode && (
+              <Button
+                variant="success"
+                onClick={() => {
+                  // const context = {
+                  //   _recipeInstance,
+                  //   recipeName,
+                  //   ingredientsCalculations,
+                  // }
+                  // addRecipeHelper(context)()
+                }}
+              >
+                Aggiungi ricetta
+              </Button>
+            )}
           </Col>
         </Row>
       </Col>

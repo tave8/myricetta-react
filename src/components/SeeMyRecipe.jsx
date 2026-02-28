@@ -3,7 +3,7 @@ import { Container, Row, Col, CardGroup, Card, Spinner, Alert, Button, Image, Fo
 
 import { QuantityIsNotValidError } from "../assets/js/Recipe/errors"
 import RecipeRemote from "../assets/js/Recipe/RecipeRemote"
-import { useParams } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 
 const RecipeCalculations = () => {
   // the Recipe instance. must not me touched.
@@ -19,6 +19,7 @@ const RecipeCalculations = () => {
   const [ingredientsCalculationsFromRecipeQuantity, setIngredientsCalculationsFromRecipeQuantity] = useState(null)
 
   const urlParams = useParams()
+  const navigate = useNavigate()
 
   /**
    * On component mount, load the recipe with the provided id
@@ -42,6 +43,17 @@ const RecipeCalculations = () => {
       <Row className="justify-content-center">
         <Col xs={12} md={6}>
           <Row className="flex-column gap-5">
+            {/* PAGE TITLE */}
+            <Col>
+              <h2 className="text-center">Vedi ricetta</h2>
+              <Button
+                onClick={() => {
+                  navigate(`/edit-recipe/${"xx"}`)
+                }}
+              >
+                Modifica
+              </Button>
+            </Col>
             {/* FROM 1 INGREDIENT, CALCULATE THE OTHERS */}
             <Col>
               <Row className="flex-column g-3">
