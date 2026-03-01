@@ -1,7 +1,9 @@
 import { useState } from "react"
+import { Row, Col, Placeholder, Spinner, Alert, Button, Image, Form, Table } from "react-bootstrap"
+
 import { QuantityIsNotValidError } from "../../assets/js/Recipe/errors"
 
-const RecipeQuantityToIngredients = () => {
+const RecipeQuantityToIngredients = ({ _recipeInstance }) => {
   // feature: from recipe total quantity, calculate ingredients
   const [knownRecipeQuantity, setKnownRecipeQuantity] = useState("")
   const [ingredientsCalculationsFromRecipeQuantity, setIngredientsCalculationsFromRecipeQuantity] = useState(null)
@@ -119,6 +121,5 @@ const calcIngredientsFromRecipeQuantityHelper = ({ _recipeInstance, knownRecipeQ
 const scrollIntoViewOfKnownRecipeQuantityInput = () => {
   // document.getElementById("known-recipe-quantity-input").scrollIntoView()
 }
-
 
 export default RecipeQuantityToIngredients
