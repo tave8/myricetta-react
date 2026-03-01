@@ -61,15 +61,26 @@ const SeeMyRecipe = () => {
             {!isLoadingRecipe && (
               <>
                 <h2 className="text-center">{recipeName}</h2>
-                <Button
-                  onClick={() => {
-                    navigate(`/edit-recipe/${"xx"}`)
-                  }}
-                >
-                  Modifica
-                </Button>
               </>
             )}
+          </Col>
+          {/* ACTIONS */}
+          <Col>
+            <Row className="justify-content-center">
+              <Col className="text-center">
+                {!isLoadingRecipe && (
+                  <>
+                    <Button
+                      onClick={() => {
+                        navigate(`/edit-recipe/${"xx"}`)
+                      }}
+                    >
+                      Modifica
+                    </Button>
+                  </>
+                )}
+              </Col>
+            </Row>
           </Col>
           {/* RECIPE PHOTO */}
           <Col className="text-center">
@@ -156,6 +167,26 @@ const SeeMyRecipe = () => {
           {/* RECIPE CALCULATIONS (from one ingredient to others, 
               from recipe quantity to ingredients) */}
           {ingredientsData && <RecipeCalculations _recipeInstance={_recipeInstance} />}
+
+          {/* ACTIONS */}
+          <Col style={{ marginTop: "10rem" }}>
+            <Row className="justify-content-center">
+              <Col className="text-center">
+                {!isLoadingRecipe && (
+                  <>
+                    <Button
+                      variant="danger"
+                      onClick={() => {
+                        //
+                      }}
+                    >
+                      Elimina
+                    </Button>
+                  </>
+                )}
+              </Col>
+            </Row>
+          </Col>
         </Row>
       </Col>
     </Row>
