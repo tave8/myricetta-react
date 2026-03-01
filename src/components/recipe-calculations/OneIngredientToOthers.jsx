@@ -10,10 +10,11 @@ const OneIngredientToOthers = ({ _recipeInstance }) => {
   // feature: from one ingredient, calculate others
   const [knownIngredientName, setKnownIngredientName] = useState("")
   const [knownIngredientQuantity, setKnownIngredientQuantity] = useState("")
-  // const [ingredientsCalculationsFromIngredient, setIngredientsCalculationsFromIngredient] = useState(null)
+  const [ingredientsCalculationsFromIngredient, setIngredientsCalculationsFromIngredient] = useState(null)
 
   // console.log(_recipeInstance)
-  console.log(ingredients)
+  // console.log(ingredients)
+  // console.log(ingredientsCalculationsFromIngredient)
 
   return (
     <>
@@ -40,14 +41,14 @@ const OneIngredientToOthers = ({ _recipeInstance }) => {
                       if (isOptionEmpty) {
                         setKnownIngredientQuantity("")
                       }
-                      // const context = {
-                      //   _recipeInstance,
-                      //   knownIngredientName: val,
-                      //   knownIngredientQuantity,
-                      //   setIngredientsCalculationsFromIngredient,
-                      // }
-                      // calcIngredientsFromOneIngredientHelper(context)()
-                      // // focusKnownIngredientQuantity()
+                      const context = {
+                        _recipeInstance,
+                        knownIngredientName: val,
+                        knownIngredientQuantity,
+                        setIngredientsCalculationsFromIngredient,
+                      }
+                      calcIngredientsFromOneIngredientHelper(context)()
+
                       // setTimeout(() => {
                       //   scrollIntoViewOfKnownIngredientNameInput()
                       // }, 100)
@@ -73,13 +74,13 @@ const OneIngredientToOthers = ({ _recipeInstance }) => {
                     onChange={(event) => {
                       const val = event.target.value
                       setKnownIngredientQuantity(val)
-                      // const context = {
-                      //   _recipeInstance,
-                      //   knownIngredientName,
-                      //   knownIngredientQuantity: val,
-                      //   setIngredientsCalculationsFromIngredient,
-                      // }
-                      // calcIngredientsFromOneIngredientHelper(context)()
+                      const context = {
+                        _recipeInstance,
+                        knownIngredientName,
+                        knownIngredientQuantity: val,
+                        setIngredientsCalculationsFromIngredient,
+                      }
+                      calcIngredientsFromOneIngredientHelper(context)()
                       // setTimeout(() => {
                       //   scrollIntoViewOfKnownIngredientNameInput()
                       // }, 100)
@@ -152,41 +153,41 @@ const OneIngredientToOthers = ({ _recipeInstance }) => {
   )
 }
 
-// const calcIngredientsFromOneIngredientHelper = ({
-//   _recipeInstance,
-//   knownIngredientName,
-//   knownIngredientQuantity,
-//   setIngredientsCalculationsFromIngredient,
-// }) => {
-//   return () => {
-//     try {
-//       // if there's no ingredient selected
-//       if (knownIngredientName == "") {
-//         return
-//       }
-//       const ingredientsData = _recipeInstance.calcFromIngredient({
-//         name: knownIngredientName,
-//         quantity: knownIngredientQuantity,
-//       })
-//       setIngredientsCalculationsFromIngredient(ingredientsData)
-//     } catch (err) {
-//       // why ignore this error? because the user might
-//       // me in the process of typing, or a new refresh of the calculations
-//       // is requested, so we don't have enough information
-//       // to lock ourselves onto a decision, so for now ignore the error
-//       if (err instanceof QuantityIsNotValidError) {
-//         setIngredientsCalculationsFromIngredient({
-//           ingredients: [],
-//           totIngredientsRounded: 0,
-//         })
-//         console.info(`ignored invalid quantity in "calcIngredientsFromOneIngredientHelper"`)
-//       }
-//     }
-//   }
-// }
+const calcIngredientsFromOneIngredientHelper = ({
+  _recipeInstance,
+  knownIngredientName,
+  knownIngredientQuantity,
+  setIngredientsCalculationsFromIngredient,
+}) => {
+  return () => {
+    try {
+      // if there's no ingredient selected
+      if (knownIngredientName == "") {
+        return
+      }
+      const ingredientsData = _recipeInstance.calcFromIngredient({
+        name: knownIngredientName,
+        quantity: knownIngredientQuantity,
+      })
+      setIngredientsCalculationsFromIngredient(ingredientsData)
+    } catch (err) {
+      // why ignore this error? because the user might
+      // me in the process of typing, or a new refresh of the calculations
+      // is requested, so we don't have enough information
+      // to lock ourselves onto a decision, so for now ignore the error
+      if (err instanceof QuantityIsNotValidError) {
+        setIngredientsCalculationsFromIngredient({
+          ingredients: [],
+          totIngredientsRounded: 0,
+        })
+        console.info(`ignored invalid quantity in "calcIngredientsFromOneIngredientHelper"`)
+      }
+    }
+  }
+}
 
-// const scrollIntoViewOfKnownIngredientNameInput = () => {
-//   // document.getElementById("known-ingredient-name-input").scrollIntoView()
-// }
+const scrollIntoViewOfKnownIngredientNameInput = () => {
+  // document.getElementById("known-ingredient-name-input").scrollIntoView()
+}
 
 export default OneIngredientToOthers
