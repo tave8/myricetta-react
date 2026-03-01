@@ -4,6 +4,9 @@ import { Row, Col, Placeholder, Spinner, Alert, Button, Image, Form, Table } fro
 import { QuantityIsNotValidError } from "../../assets/js/Recipe/errors"
 
 const OneIngredientToOthers = ({ _recipeInstance }) => {
+  // the ingredients from the _recipeInstance
+  const [ingredients, setIngredients] = useState(_recipeInstance.getOnlyIngredients())
+
   // feature: from one ingredient, calculate others
   const [knownIngredientName, setKnownIngredientName] = useState("")
   const [knownIngredientQuantity, setKnownIngredientQuantity] = useState("")
@@ -50,11 +53,11 @@ const OneIngredientToOthers = ({ _recipeInstance }) => {
                     }}
                   >
                     <option value="">Seleziona ingrediente...</option>
-                    {/* {ingredientsCalculations?.ingredients.map((ingredient) => (
+                    {ingredients.map((ingredient) => (
                       <option key={ingredient.id} value={ingredient.name}>
                         {ingredient.name}
                       </option>
-                    ))} */}
+                    ))}
                   </Form.Select>
                 </Form.Group>
               </Col>

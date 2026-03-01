@@ -67,6 +67,24 @@ export default class Recipe extends Helper {
   }
 
   /**
+   * @returns [
+   *    {
+   *      id: string
+   *      name: string
+   *    }
+   *    ...
+   * ]
+   */
+  getOnlyIngredients() {
+    return this.ingredients.map((ingredient) => {
+      return {
+        id: ingredient.getId(),
+        name: ingredient.getName(),
+      }
+    })
+  }
+
+  /**
    * Throws StringIsNotStringError
    *
    */
