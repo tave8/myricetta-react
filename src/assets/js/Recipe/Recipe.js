@@ -32,7 +32,18 @@ export default class Recipe extends Helper {
     super()
     const finalParams = { ...structuredClone(defaultParams), ...structuredClone(params) }
     this.id = this.constructor.generateId()
+    // this.name = ""
     this.ingredients = []
+    /**
+     * ```
+     * [
+     *    {
+     *       name: string
+     *    }
+     * ]
+     * ```
+     */
+    this.tags = []
     this.config = finalParams.config
     // this.overridden = false
   }
@@ -587,6 +598,13 @@ export default class Recipe extends Helper {
 
   recipeHasIngredients() {
     return this.ingredients.length > 0
+  }
+
+  /**
+   * Add a tag to the recipe
+   */
+  addTag(_tagName) {
+
   }
 }
 

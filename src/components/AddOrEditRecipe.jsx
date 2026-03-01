@@ -56,7 +56,7 @@ const RecipeComponent = (props) => {
             {/* ADD MODE */}
             {!props.isEditMode && <h2 className="text-center">{recipeName.trim() == "" ? "Aggiungi ricetta" : "Ricetta per " + recipeName}</h2>}
           </Col>
-          {/* RECIPE INFO (name, photo etc.) */}
+          {/* RECIPE INFO (name, tags, photo etc.) */}
           <Col>
             <Row className="justify-content-center">
               {/* recipe name */}
@@ -75,8 +75,16 @@ const RecipeComponent = (props) => {
                 </Form.Group>
               </Col>
             </Row>
-            <Row className="mt-3">
-              {/*  */}
+            <Row className="flex-column mt-3">
+              {/* tags */}
+              {/* <Col>
+                <Row className="flex-column align-items-center g-3">
+                  <Col xs={12} md={6}>
+                    <p>tags</p>
+                  </Col>
+                </Row>
+              </Col> */}
+              {/* photo */}
               <Col>
                 <Row className="flex-column align-items-center g-3">
                   <Col xs={12} md={6}>
