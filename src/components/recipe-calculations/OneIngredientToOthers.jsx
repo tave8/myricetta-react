@@ -99,54 +99,51 @@ const OneIngredientToOthers = ({ _recipeInstance }) => {
             </Row>
           </Col>
           {/* ingredients list */}
-
           {knownIngredientQuantity && knownIngredientName && (
-            <p></p>
-            // <Col>
-            //   <Row className="justify-content-center">
-            //     <Col xs={12}>
-            //       {ingredientsCalculationsFromIngredient?.ingredients.length > 0 && (
-            //         <Table striped bordered hover style={{ tableLayout: "fixed", width: "100%" }}>
-            //           <colgroup>
-            //             <col style={{ width: "70%" }} />
-            //             <col style={{ width: "30%" }} />
-            //           </colgroup>
+            <Col>
+              <Row className="justify-content-center">
+                <Col xs={12}>
+                  {ingredientsCalculationsFromIngredient?.ingredients.length > 0 && (
+                    <Table striped bordered hover style={{ tableLayout: "fixed", width: "100%" }}>
+                      <colgroup>
+                        <col style={{ width: "70%" }} />
+                        <col style={{ width: "30%" }} />
+                      </colgroup>
 
-            //           <thead>
-            //             <tr>
-            //               <th>Ingr.</th>
-            //               <th className="text-end">Q.tà</th>
-            //             </tr>
-            //           </thead>
+                      <thead>
+                        <tr>
+                          <th>Ingr.</th>
+                          <th className="text-end">Q.tà</th>
+                        </tr>
+                      </thead>
 
-            //           <tbody>
+                      <tbody>
+                        {/* exist ingredients */}
 
-            /* exist ingredients */
-
-            // {ingredientsCalculationsFromIngredient?.ingredients.map((ingredient) => {
-            //   const isIngredientInListSameAsKnownIngredient = ingredient.name == knownIngredientName
-            //   return (
-            //     <tr key={ingredient.id} className={isIngredientInListSameAsKnownIngredient ? "table-primary" : ""}>
-            //       <td>{ingredient.name}</td>
-            //       <td className="text-end">{ingredient.quantityRounded} g</td>
-            //     </tr>
-            //   )
-            // })}
-            //   </tbody>
-            //   <tfoot>
-            //     {ingredientsCalculationsFromIngredient?.ingredients.length > 0 && (
-            //       <tr className="text-end fw-bold">
-            //         <td>TOTALE:</td>
-            //         <td>{ingredientsCalculationsFromIngredient.totIngredientsRounded} g</td>
-            //       </tr>
-            //     )}
-            //   </tfoot>
-            // </Table>
+                        {ingredientsCalculationsFromIngredient?.ingredients.map((ingredient) => {
+                          const isIngredientInListSameAsKnownIngredient = ingredient.name == knownIngredientName
+                          return (
+                            <tr key={ingredient.id} className={isIngredientInListSameAsKnownIngredient ? "table-primary" : ""}>
+                              <td>{ingredient.name}</td>
+                              <td className="text-end">{ingredient.quantityRounded} g</td>
+                            </tr>
+                          )
+                        })}
+                      </tbody>
+                      <tfoot>
+                        {ingredientsCalculationsFromIngredient?.ingredients.length > 0 && (
+                          <tr className="text-end fw-bold">
+                            <td>TOTALE:</td>
+                            <td>{ingredientsCalculationsFromIngredient.totIngredientsRounded} g</td>
+                          </tr>
+                        )}
+                      </tfoot>
+                    </Table>
+                  )}
+                </Col>
+              </Row>
+            </Col>
           )}
-          {/* </Col> */}
-          {/* </Row> */}
-          {/* </Col> */}
-          {/* )} */}
         </Row>
       </Col>
     </>
