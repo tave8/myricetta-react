@@ -5,7 +5,7 @@ import RecipeQuantityToIngredients from "./RecipeQuantityToIngredients"
 const RecipeCalculations = ({ _recipeInstance }) => {
   return (
     <>
-      {/* <OneIngredientToOthers _recipeInstance={_recipeInstance} /> */}
+      <OneIngredientToOthers _recipeInstance={_recipeInstance} />
       <RecipeQuantityToIngredients _recipeInstance={_recipeInstance} />
     </>
   )
